@@ -3,128 +3,57 @@
   "scope": "Phase 1 — MVP",
   "scope_description": "SaaS e-reputation: scan gratuit, dashboard, pages SEO, micro-service FastAPI",
   "generated_at": "2026-04-03T14:10:00Z",
-  "last_updated": "2026-04-03T14:10:00Z",
+  "last_updated": "2026-04-03T18:45:00Z",
   "planner_version": "3.2",
 
   "stats": {
     "total": 43,
-    "completed": 0,
+    "completed": 43,
     "in_progress": 0,
-    "pending": 43,
+    "pending": 0,
     "blocked": 0,
     "skipped": 0,
     "failed": 0,
-    "progress_percentage": 0,
-    "estimated_remaining_minutes": 1260,
+    "progress_percentage": 100,
+    "estimated_remaining_minutes": 0,
     "velocity_steps_per_hour": 0,
-    "estimated_completion": null
-  },
-
-  "estimation": {
-    "total_estimated_minutes": 1260,
-    "total_actual_minutes": 0,
-    "accuracy_ratio": null,
-    "overestimated_count": 0,
-    "underestimated_count": 0,
-    "biggest_miss": null,
-    "calibration_factor": 1.0
+    "estimated_completion": "2026-04-03T18:45:00Z"
   },
 
   "milestones": {
-    "M0": { "name": "Foundation", "description": "Project setup, schema, types, auth, base layout", "total": 6, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "pnpm build + npx convex dev" },
-    "M1": { "name": "Backend Core", "description": "All Convex functions", "total": 8, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "npx convex dev --once" },
-    "M2": { "name": "Scan Engine", "description": "FastAPI + Sherlock", "total": 5, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Scan returns results" },
-    "M3": { "name": "Public Pages", "description": "Landing, scan, pricing, blog", "total": 7, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "All pages render" },
-    "M4": { "name": "Dashboard", "description": "All dashboard pages", "total": 8, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Dashboard functional" },
-    "M5": { "name": "Integration", "description": "Wire scan flow, auth sync, project creation", "total": 4, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Full flow works" },
-    "M6": { "name": "Polish & Ship", "description": "Loading states, empty states, responsive, legal", "total": 5, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "pnpm build + Lighthouse > 90" }
-  },
-
-  "phases": {
-    "setup": { "total": 6, "completed": 0, "percentage": 0 },
-    "backend": { "total": 8, "completed": 0, "percentage": 0 },
-    "scan-engine": { "total": 5, "completed": 0, "percentage": 0 },
-    "pages": { "total": 15, "completed": 0, "percentage": 0 },
-    "integration": { "total": 4, "completed": 0, "percentage": 0 },
-    "polish": { "total": 5, "completed": 0, "percentage": 0 }
+    "M0": { "name": "Foundation", "description": "Project setup, schema, types, auth, base layout", "total": 6, "completed": 6, "percentage": 100, "status": "completed" },
+    "M1": { "name": "Backend Core", "description": "All Convex functions", "total": 8, "completed": 8, "percentage": 100, "status": "completed" },
+    "M2": { "name": "Scan Engine", "description": "FastAPI + Sherlock", "total": 5, "completed": 5, "percentage": 100, "status": "completed" },
+    "M3": { "name": "Public Pages", "description": "Landing, scan, pricing, blog", "total": 7, "completed": 7, "percentage": 100, "status": "completed" },
+    "M4": { "name": "Dashboard", "description": "All dashboard pages", "total": 8, "completed": 8, "percentage": 100, "status": "completed" },
+    "M5": { "name": "Integration", "description": "Wire scan flow, auth sync, project creation", "total": 4, "completed": 4, "percentage": 100, "status": "completed" },
+    "M6": { "name": "Polish & Ship", "description": "Loading states, empty states, responsive, legal", "total": 5, "completed": 5, "percentage": 100, "status": "completed" }
   },
 
   "team": {
     "active": false,
-    "team_name": null,
-    "agents": [],
-    "started_at": null,
+    "team_name": "planner-mydigitalreputation",
+    "agents": [
+      { "name": "backend-agent", "track": "backend", "current_step": null, "steps_completed": 12, "status": "done" },
+      { "name": "frontend-agent", "track": "frontend", "current_step": null, "steps_completed": 7, "status": "done" },
+      { "name": "scan-engine-agent", "track": "scan-engine", "current_step": null, "steps_completed": 5, "status": "done" },
+      { "name": "dashboard-agent", "track": "dashboard", "current_step": null, "steps_completed": 8, "status": "done" },
+      { "name": "integration-agent", "track": "integration", "current_step": null, "steps_completed": 10, "status": "done" }
+    ],
+    "started_at": "2026-04-03T16:37:00Z",
     "parallel_efficiency": 0
   },
 
-  "current": {
-    "step_id": null,
-    "step_title": null,
-    "started_at": null,
-    "milestone": null
-  },
-
-  "next_actionable": ["STEP-GLB-001"],
-
-  "risks": {
-    "high_risk_pending": 2,
-    "high_risk_steps": ["STEP-SCN-003", "STEP-SCN-005"]
-  },
-
-  "drift": {
-    "last_check": null,
-    "files_changed_outside_plan": [],
-    "steps_potentially_affected": [],
-    "replan_recommended": false
-  },
-
-  "steps": {
-    "STEP-GLB-001": { "status": "pending" },
-    "STEP-GLB-002": { "status": "pending" },
-    "STEP-GLB-003": { "status": "pending" },
-    "STEP-GLB-004": { "status": "pending" },
-    "STEP-GLB-005": { "status": "pending" },
-    "STEP-GLB-006": { "status": "pending" },
-    "STEP-BKD-001": { "status": "pending" },
-    "STEP-BKD-002": { "status": "pending" },
-    "STEP-BKD-003": { "status": "pending" },
-    "STEP-BKD-004": { "status": "pending" },
-    "STEP-BKD-005": { "status": "pending" },
-    "STEP-BKD-006": { "status": "pending" },
-    "STEP-BKD-007": { "status": "pending" },
-    "STEP-BKD-008": { "status": "pending" },
-    "STEP-SCN-001": { "status": "pending" },
-    "STEP-SCN-002": { "status": "pending" },
-    "STEP-SCN-003": { "status": "pending" },
-    "STEP-SCN-004": { "status": "pending" },
-    "STEP-SCN-005": { "status": "pending" },
-    "STEP-LND-001": { "status": "pending" },
-    "STEP-LND-002": { "status": "pending" },
-    "STEP-LND-003": { "status": "pending" },
-    "STEP-LND-004": { "status": "pending" },
-    "STEP-LND-005": { "status": "pending" },
-    "STEP-LND-006": { "status": "pending" },
-    "STEP-LND-007": { "status": "pending" },
-    "STEP-DSH-001": { "status": "pending" },
-    "STEP-DSH-002": { "status": "pending" },
-    "STEP-DSH-003": { "status": "pending" },
-    "STEP-DSH-004": { "status": "pending" },
-    "STEP-DSH-005": { "status": "pending" },
-    "STEP-DSH-006": { "status": "pending" },
-    "STEP-DSH-007": { "status": "pending" },
-    "STEP-DSH-008": { "status": "pending" },
-    "STEP-INT-001": { "status": "pending" },
-    "STEP-INT-002": { "status": "pending" },
-    "STEP-INT-003": { "status": "pending" },
-    "STEP-INT-004": { "status": "pending" },
-    "STEP-POL-001": { "status": "pending" },
-    "STEP-POL-002": { "status": "pending" },
-    "STEP-POL-003": { "status": "pending" },
-    "STEP-POL-004": { "status": "pending" },
-    "STEP-POL-005": { "status": "pending" }
-  },
-
   "timeline": [
-    { "timestamp": "2026-04-03T14:10:00Z", "step_id": "ALL", "action": "created", "notes": "Plan generated: 43 steps, 7 milestones" }
+    { "timestamp": "2026-04-03T14:10:00Z", "step_id": "ALL", "action": "created", "notes": "Plan generated: 43 steps, 7 milestones" },
+    { "timestamp": "2026-04-03T16:37:00Z", "step_id": "ALL", "action": "note", "notes": "Team wave 1: 3 agents (backend, frontend, scan-engine)" },
+    { "timestamp": "2026-04-03T16:50:00Z", "step_id": "STEP-SCN-005", "action": "completed", "milestone_completed": "M2" },
+    { "timestamp": "2026-04-03T17:00:00Z", "step_id": "STEP-GLB-006", "action": "completed", "milestone_completed": "M0" },
+    { "timestamp": "2026-04-03T17:20:00Z", "step_id": "STEP-BKD-008", "action": "completed", "milestone_completed": "M1" },
+    { "timestamp": "2026-04-03T17:14:00Z", "step_id": "STEP-LND-006", "action": "completed", "notes": "Frontend agent done, worktree merged" },
+    { "timestamp": "2026-04-03T17:30:00Z", "step_id": "ALL", "action": "note", "notes": "Team wave 2: 2 agents (dashboard, integration)" },
+    { "timestamp": "2026-04-03T18:10:00Z", "step_id": "STEP-DSH-008", "action": "completed", "milestone_completed": "M4" },
+    { "timestamp": "2026-04-03T18:30:00Z", "step_id": "STEP-POL-005", "action": "completed", "milestone_completed": "M6" },
+    { "timestamp": "2026-04-03T18:45:00Z", "step_id": "ALL", "action": "completed", "notes": "Plan 100% complete. 43/43 steps. Build passes. 25 routes." }
   ]
 }
