@@ -1,0 +1,1547 @@
+{
+  "chunk": 1,
+  "range": "STEP-GLB-001 to STEP-POL-005",
+  "count": 43,
+  "steps": [
+
+    {
+      "id": "STEP-GLB-001",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Initialize Next.js 16 project with TypeScript, Tailwind, shadcn/ui",
+      "description": "Create the Next.js project with App Router, TypeScript, Tailwind CSS. Initialize shadcn/ui with components.json. Ask user for theme choice (Claude Code, Vercel, T3 Chat, or Caffeine).",
+      "scope": "Global", "why": "Foundation of the entire app — everything builds on this.",
+      "type": "config", "priority": "critical", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": [], "blocks": ["STEP-GLB-002", "STEP-GLB-003", "STEP-GLB-004"],
+      "parallel_group": null, "team_track": "setup", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "package.json", "purpose": "Project manifest" },
+        { "path": "next.config.ts", "purpose": "Next.js config" },
+        { "path": "tailwind.config.ts", "purpose": "Tailwind config" },
+        { "path": "tsconfig.json", "purpose": "TypeScript config" },
+        { "path": "components.json", "purpose": "shadcn/ui config" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "pnpm dev starts without errors",
+        "shadcn/ui initialized with chosen theme",
+        "TypeScript strict mode enabled"
+      ],
+      "attention_points": ["Use pnpm as package manager", "App Router (not Pages)"],
+      "testing": ["pnpm dev runs", "pnpm build passes"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "Foundation",
+      "technical_notes": "npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir. Then pnpm dlx shadcn@latest init. Then apply chosen theme.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "rm -rf node_modules package.json and start over",
+      "agent_prompt": "Initialize Next.js 16 project in the current directory. Use: npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --use-pnpm. Then initialize shadcn/ui: pnpm dlx shadcn@latest init. ASK THE USER which theme they want before applying it (options: Claude Code, Vercel, T3 Chat, Caffeine). Apply the chosen theme. Verify pnpm build passes.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-GLB-002",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Install and configure Convex",
+      "description": "Install Convex, initialize the project, create convex/ directory with schema placeholder. Configure ConvexClientProvider.",
+      "scope": "Global", "why": "Convex is the real-time backend — needed for all data operations.",
+      "type": "config", "priority": "critical", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-001"], "blocks": ["STEP-GLB-003"],
+      "parallel_group": null, "team_track": "setup", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/_generated/", "purpose": "Convex generated types" },
+        { "path": "convex/schema.ts", "purpose": "Database schema placeholder" },
+        { "path": "src/components/providers/convex-client-provider.tsx", "purpose": "Convex provider wrapper" }
+      ],
+      "files_to_modify": [
+        { "path": "src/app/layout.tsx", "what": "Wrap app with ConvexClientProvider" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "npx convex dev connects successfully",
+        "ConvexClientProvider wraps the app in layout.tsx"
+      ],
+      "attention_points": ["Use ConvexProviderWithClerk for auth integration later"],
+      "testing": ["npx convex dev runs"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "Foundation",
+      "technical_notes": "pnpm add convex. npx convex init. Create ConvexClientProvider with ConvexProvider wrapping children.",
+      "code_patterns": [], "packages_needed": ["convex"], "env_vars_needed": ["CONVEX_DEPLOYMENT", "NEXT_PUBLIC_CONVEX_URL"],
+      "rollback": "Remove convex/ directory and convex from package.json",
+      "agent_prompt": "Install Convex: pnpm add convex. Run npx convex init. Create convex/schema.ts with empty defineSchema({}). Create src/components/providers/convex-client-provider.tsx with ConvexProvider. Wrap the app in src/app/layout.tsx. Verify npx convex dev --once works.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-GLB-003",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Define complete Convex schema (all 6 tables)",
+      "description": "Create the full Convex schema with users, scans, profiles, alerts, projects, and platforms tables as defined in the design spec.",
+      "scope": "Global", "why": "The data model drives everything — backend queries, frontend types, dashboard structure.",
+      "type": "schema", "priority": "critical", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-002"], "blocks": ["STEP-BKD-001", "STEP-BKD-002", "STEP-BKD-003", "STEP-BKD-004", "STEP-BKD-005", "STEP-BKD-006", "STEP-BKD-007"],
+      "parallel_group": null, "team_track": "backend", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [],
+      "files_to_modify": [
+        { "path": "convex/schema.ts", "what": "Define all 6 tables with fields, validators, and indexes" }
+      ],
+      "files_to_read": ["docs/superpowers/specs/2026-04-03-my-digital-reputation-design.md"],
+      "acceptance_criteria": [
+        "Schema defines 6 tables: users, scans, profiles, alerts, projects, platforms",
+        "All fields match the design spec data model",
+        "Indexes on users.clerkId, scans.userId, scans.status, profiles.userId, alerts.userId, projects.userId",
+        "npx convex dev --once passes without errors"
+      ],
+      "attention_points": [
+        "users.plan is 'free' | 'preventive' only (no 'defensive')",
+        "scans.userId is optional (v.optional(v.id('users')))",
+        "Use v.array() for nested arrays, v.object() for nested objects"
+      ],
+      "testing": ["npx convex dev --once"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "Foundation",
+      "technical_notes": "Follow the data model from the spec exactly. Use Convex v validators (v.string(), v.number(), v.boolean(), v.optional(), v.union(v.literal()), v.array(), v.object()). Add .index() for foreign key fields.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Revert convex/schema.ts to empty schema",
+      "agent_prompt": "Read the design spec at docs/superpowers/specs/2026-04-03-my-digital-reputation-design.md, section 'Data model (Convex)'. Implement the full schema in convex/schema.ts with all 6 tables (users, scans, profiles, alerts, projects, platforms). Use proper Convex validators. Add indexes on: users by clerkId, scans by userId and by status, profiles by userId, alerts by userId, projects by userId. Remember: users.plan is only 'free' | 'preventive'. scans.userId is optional. Verify with npx convex dev --once.",
+      "reference_files": ["docs/superpowers/specs/2026-04-03-my-digital-reputation-design.md"]
+    },
+
+    {
+      "id": "STEP-GLB-004",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Install and configure Clerk authentication",
+      "description": "Install Clerk, configure middleware, create sign-in/sign-up pages, update ConvexClientProvider to use ConvexProviderWithClerk.",
+      "scope": "Global", "why": "Auth is needed for the dashboard and to save scan results to user accounts.",
+      "type": "config", "priority": "critical", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-001"], "blocks": ["STEP-GLB-005", "STEP-BKD-008"],
+      "parallel_group": "setup-parallel-1", "team_track": "setup", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(auth)/sign-in/[[...sign-in]]/page.tsx", "purpose": "Sign in page" },
+        { "path": "src/app/(auth)/sign-up/[[...sign-up]]/page.tsx", "purpose": "Sign up page" },
+        { "path": "src/middleware.ts", "purpose": "Clerk auth middleware" }
+      ],
+      "files_to_modify": [
+        { "path": "src/components/providers/convex-client-provider.tsx", "what": "Switch to ConvexProviderWithClerk" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Clerk sign-in and sign-up pages render",
+        "Middleware protects /dashboard/* routes",
+        "ConvexProviderWithClerk configured with Clerk publishableKey"
+      ],
+      "attention_points": ["Public routes: /, /scan, /scan/*, /pricing, /blog/*, /guides/*, /contact", "Protected routes: /dashboard/*"],
+      "testing": ["Sign up flow works", "Dashboard redirect to sign-in when not authed"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "Foundation",
+      "technical_notes": "pnpm add @clerk/nextjs. Use clerkMiddleware() with createRouteMatcher for public routes. ConvexProviderWithClerk from convex/react-clerk.",
+      "code_patterns": [], "packages_needed": ["@clerk/nextjs"], "env_vars_needed": ["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY"],
+      "rollback": "Remove Clerk packages and revert to basic ConvexProvider",
+      "agent_prompt": "Install Clerk: pnpm add @clerk/nextjs. Create src/middleware.ts with clerkMiddleware — public routes: /, /scan(.*), /pricing, /blog(.*), /guides(.*), /contact. Create sign-in and sign-up catch-all pages under src/app/(auth)/. Update convex-client-provider.tsx to use ConvexProviderWithClerk with useAuth from Clerk. Add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY to .env.local. Verify pnpm build passes.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-GLB-005",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Create dashboard layout with sidebar and header",
+      "description": "Build the authenticated dashboard layout: collapsible sidebar with nav items, header with search/alerts/avatar, footer bar with credits and plan. Install required shadcn components.",
+      "scope": "Global", "why": "The layout is the shell for all dashboard pages — consistent navigation and structure.",
+      "type": "layout", "priority": "high", "complexity": "moderate", "estimated_minutes": 40,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-004"], "blocks": ["STEP-DSH-001", "STEP-DSH-002", "STEP-DSH-003", "STEP-DSH-004", "STEP-DSH-005", "STEP-DSH-006", "STEP-DSH-007", "STEP-DSH-008"],
+      "parallel_group": null, "team_track": "frontend", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/layout.tsx", "purpose": "Dashboard layout wrapper" },
+        { "path": "src/components/layout/sidebar.tsx", "purpose": "Collapsible sidebar" },
+        { "path": "src/components/layout/header.tsx", "purpose": "Dashboard header" },
+        { "path": "src/components/layout/footer-bar.tsx", "purpose": "Credits and plan bar" }
+      ],
+      "files_to_modify": [],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Sidebar shows all nav items: Dashboard, Scans, Profils, Alertes, Projets, Settings",
+        "Sidebar is collapsible (icon-only mode)",
+        "Header shows search input, alert bell icon, user avatar (Clerk UserButton)",
+        "Footer bar shows credits remaining and current plan",
+        "Layout is responsive — sidebar auto-collapses on mobile"
+      ],
+      "attention_points": ["Use shadcn Sidebar component if available, or build custom", "Icons from lucide-react"],
+      "testing": ["Dashboard layout renders at /dashboard", "Sidebar collapse toggle works"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Sidebar", "source": "shadcn/ui or custom" },
+        { "component": "Button", "variant": "ghost", "source": "shadcn/ui" },
+        { "component": "Avatar", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Sidebar icons: LayoutDashboard, Search, UserCircle, Bell, FolderKanban, Settings"],
+      "brand_alignment": "Professional, clean dashboard feel",
+      "technical_notes": "Install shadcn components: button, avatar, separator, tooltip, sheet (mobile). Use Clerk's UserButton for avatar. Sidebar state in localStorage for persistence.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete layout files",
+      "agent_prompt": "Create the dashboard layout. Install shadcn components: pnpm dlx shadcn@latest add button avatar separator tooltip sheet sidebar. Create src/app/dashboard/layout.tsx that wraps children with sidebar + header + footer-bar. Create src/components/layout/sidebar.tsx (collapsible, nav items: Dashboard, Scans, Profils, Alertes, Projets, Settings — use lucide icons). Create src/components/layout/header.tsx (search input, bell icon, Clerk UserButton). Create src/components/layout/footer-bar.tsx (placeholder credits display and plan badge). Responsive: sidebar as Sheet on mobile. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-GLB-006",
+      "phase": "setup", "layer": 1, "milestone": "M0",
+      "title": "Create public layout and shared UI components",
+      "description": "Build the public site layout: navbar with logo + nav links + CTA, footer with links. Install core shadcn components used across the app.",
+      "scope": "Global", "why": "Public pages (landing, scan, pricing, blog) need a consistent shell.",
+      "type": "layout", "priority": "high", "complexity": "simple", "estimated_minutes": 25,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-001"], "blocks": ["STEP-LND-001", "STEP-LND-002", "STEP-LND-003", "STEP-LND-004", "STEP-LND-005", "STEP-LND-006"],
+      "parallel_group": "setup-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/layout.tsx", "purpose": "Public pages layout" },
+        { "path": "src/components/layout/navbar.tsx", "purpose": "Public site navbar" },
+        { "path": "src/components/layout/footer.tsx", "purpose": "Public site footer" }
+      ],
+      "files_to_modify": [],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Navbar with logo, nav links (Scan, Pricing, Blog, Contact), CTA button (Se connecter / Dashboard)",
+        "Footer with product links, legal links, social links",
+        "Layout wraps all (public) route group pages"
+      ],
+      "attention_points": ["CTA adapts: 'Se connecter' when logged out, 'Dashboard' when logged in"],
+      "testing": ["Public layout renders", "Nav links work"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Button", "variant": "default", "source": "shadcn/ui" },
+        { "component": "NavigationMenu", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Sticky navbar", "Responsive with hamburger on mobile"],
+      "brand_alignment": "Professional, trustworthy — this is what prospects see first",
+      "technical_notes": "Install shadcn components: card, badge, input, navigation-menu. Use next/link for navigation. Check Clerk auth state for CTA button text.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete layout files",
+      "agent_prompt": "Create the public site layout. Install shadcn: pnpm dlx shadcn@latest add card badge input navigation-menu. Create src/app/(public)/layout.tsx wrapping children with Navbar + Footer. Create src/components/layout/navbar.tsx (logo text 'MyDigitalReputation', nav links: Scan, Tarifs, Blog, Contact; CTA: 'Se connecter' or 'Dashboard' based on Clerk auth). Create src/components/layout/footer.tsx (product links, legal, social placeholders). Sticky navbar, responsive hamburger on mobile. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-BKD-001",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create users Convex functions (sync with Clerk)",
+      "description": "Create Convex functions for user management: createOrGetUser mutation (called on auth), getUser query, updateUserPlan mutation.",
+      "scope": "Users", "why": "Users are the core entity — all other data hangs off userId.",
+      "type": "mutation", "priority": "critical", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-BKD-002", "STEP-INT-001"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/users.ts", "purpose": "User queries and mutations" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "createOrGetUser mutation creates user if not exists, returns existing if found (by clerkId)",
+        "getUser query returns user by clerkId",
+        "updateUserPlan mutation updates plan field"
+      ],
+      "attention_points": ["Use ctx.auth.getUserIdentity() for auth checks", "Default plan: 'free', credits: 0"],
+      "testing": ["createOrGetUser idempotent — calling twice returns same user"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Use mutation with auth check. Query user by index on clerkId. Upsert pattern: query first, create if not found.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/users.ts",
+      "agent_prompt": "Create convex/users.ts with: 1) createOrGetUser mutation — takes name, email from auth identity, queries by clerkId index, creates if not found (plan: 'free', credits: 0), returns userId. 2) getUser query — returns user by clerkId from auth. 3) updateUserPlan mutation — updates plan field. All functions use ctx.auth.getUserIdentity() for auth. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-002",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create scans Convex functions (CRUD + startScan)",
+      "description": "Create queries and mutations for scans: startScan mutation (creates scan record), updateScanResults mutation (called by webhook), getScan query, getUserScans query, retryScan mutation.",
+      "scope": "Scans", "why": "The scan is the core product feature — these functions power the scan flow.",
+      "type": "mutation", "priority": "critical", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-SCN-004", "STEP-INT-001"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/scans.ts", "purpose": "Scan queries and mutations" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "startScan creates a scan with status 'running', optional userId",
+        "updateScanResults patches scan with partial results (googleResults, platformResults, sentiment, score, problemsDetected)",
+        "getScan returns single scan by id",
+        "getUserScans returns all scans for a user, sorted by createdAt desc",
+        "completeScan sets status to 'completed' with final score"
+      ],
+      "attention_points": ["startScan works without auth (anonymous scan)", "updateScanResults is an internal mutation (no auth needed, called by httpAction)"],
+      "testing": ["Create scan, update results, verify final state"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "startScan: mutation (no auth required for anonymous). updateScanResults: internalMutation. getUserScans: query with auth. getScan: query without auth (scan results page is public via scanId).",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/scans.ts",
+      "agent_prompt": "Create convex/scans.ts with: 1) startScan mutation — args: query (string), userId (optional). Creates scan with status: 'running', empty arrays for results, createdAt: Date.now(). Returns scanId. No auth required. 2) updateScanResults internalMutation — args: scanId, partial results. Patches the scan document. 3) completeScan internalMutation — sets status 'completed', computes final score. 4) getScan query — returns scan by id (no auth). 5) getUserScans query — returns scans for authenticated user, ordered by createdAt desc. 6) linkScanToUser mutation — links anonymous scan to user after signup. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-003",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create profiles Convex functions",
+      "description": "CRUD for profiles: getUserProfiles query, createProfile mutation, updateProfileStatus mutation, getSuggestedProfiles query (returns platforms not yet created by user).",
+      "scope": "Profiles", "why": "Profile creation is a key monetized action and part of the reputation building strategy.",
+      "type": "mutation", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-DSH-004"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/profiles.ts", "purpose": "Profile queries and mutations" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "getUserProfiles returns profiles for authenticated user",
+        "createProfile creates a profile and deducts 1 credit",
+        "updateProfileStatus updates status field",
+        "getSuggestedProfiles returns platforms where user has no profile yet"
+      ],
+      "attention_points": ["createProfile must check credits > 0 before creating", "getSuggestedProfiles cross-references platforms table"],
+      "testing": ["Create profile deducts credit", "Can't create if credits = 0"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Auth required on all functions. createProfile: check user.credits > 0, throw ConvexError if not. Decrement credits atomically.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/profiles.ts",
+      "agent_prompt": "Create convex/profiles.ts. All functions require auth. 1) getUserProfiles query — returns profiles for current user. 2) createProfile mutation — args: platform, url. Checks user has credits > 0 (throw ConvexError otherwise), creates profile with status 'created', decrements user credits by 1. 3) updateProfileStatus mutation — args: profileId, status. 4) getSuggestedProfiles query — queries all platforms, filters out those where user already has a profile, returns sorted by domainAuthority desc. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-004",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create projects Convex functions",
+      "description": "CRUD for cleanup projects: getUserProjects query, createProject mutation (status: pending_call), updateProjectStatus mutation, getProject query.",
+      "scope": "Projects", "why": "Projects track the defensive cleanup service — the high-value paid offering.",
+      "type": "mutation", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-DSH-006"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/projects.ts", "purpose": "Project queries and mutations" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "createProject creates a project with status 'pending_call'",
+        "getUserProjects returns projects for authenticated user",
+        "getProject returns single project by id",
+        "updateProjectStatus updates status and optional fields"
+      ],
+      "attention_points": ["Projects are created from scan results — link to problemsDetected"],
+      "testing": ["Create project, verify status flow"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Auth required. createProject takes contentsToRemove array (from scan problemsDetected). Status flow: pending_call → quoted → in_progress → completed.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/projects.ts",
+      "agent_prompt": "Create convex/projects.ts. Auth required on all. 1) createProject mutation — args: contentsToRemove array. Creates with status 'pending_call', price: 0, empty steps array. 2) getUserProjects query — returns user's projects sorted by createdAt desc. 3) getProject query — returns project by id (auth: must be owner). 4) updateProjectStatus mutation — updates status, optional price and callBookedAt fields. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-005",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create alerts Convex functions",
+      "description": "Queries and mutations for alerts: getUserAlerts, markAlertRead, createAlert (internal), getUnreadCount.",
+      "scope": "Alerts", "why": "Alerts feed the notification bell and the alerts dashboard page.",
+      "type": "mutation", "priority": "medium", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-DSH-005"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/alerts.ts", "purpose": "Alert queries and mutations" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "getUserAlerts returns alerts for user, sorted by createdAt desc",
+        "markAlertRead sets read: true",
+        "createAlert is an internalMutation",
+        "getUnreadCount returns count of unread alerts"
+      ],
+      "attention_points": ["createAlert is internal — called by cron/monitoring, not by user"],
+      "testing": ["Create alert, mark read, verify count"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "getUserAlerts and getUnreadCount require auth. createAlert is internalMutation (called by monitoring cron in phase 2). markAlertRead requires auth + ownership check.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/alerts.ts",
+      "agent_prompt": "Create convex/alerts.ts. 1) getUserAlerts query (auth) — returns user's alerts sorted by createdAt desc, paginated (take arg with default 50). 2) getUnreadCount query (auth) — returns count where read: false. 3) markAlertRead mutation (auth) — sets read: true, verify ownership. 4) markAllAlertsRead mutation (auth) — marks all user's alerts as read. 5) createAlert internalMutation — args: userId, type, source, title, url, severity. Creates with read: false. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-006",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create platforms Convex functions and seed data",
+      "description": "Create platforms query and seed script. Seed ~30-50 priority platforms (social, review, directory, professional).",
+      "scope": "Platforms", "why": "The platforms reference table powers profile suggestions and scan results mapping.",
+      "type": "mutation", "priority": "high", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-003"], "blocks": ["STEP-BKD-003", "STEP-DSH-004"],
+      "parallel_group": "backend-parallel-1", "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/platforms.ts", "purpose": "Platform queries" },
+        { "path": "convex/seed.ts", "purpose": "Seed platforms data" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts"],
+      "acceptance_criteria": [
+        "getAllPlatforms query returns all platforms sorted by domainAuthority desc",
+        "getPlatformsByCategory query filters by category",
+        "Seed script inserts ~30-50 real platforms with accurate data",
+        "Categories covered: social, review, directory, professional"
+      ],
+      "attention_points": ["Include major platforms: LinkedIn, Twitter/X, Facebook, Instagram, TikTok, Google Reviews, Trustpilot, Pages Jaunes, Glassdoor, Indeed, Yelp, etc.", "domainAuthority should be realistic estimates"],
+      "testing": ["Run seed, verify platforms exist"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Seed as internalMutation. Include sherlockSupported: true for platforms Sherlock can check. autoCreatable: true for platforms with easy signup. guideUrl can be empty for MVP.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/platforms.ts and convex/seed.ts",
+      "agent_prompt": "Create convex/platforms.ts with: 1) getAllPlatforms query — returns all, sorted by domainAuthority desc. 2) getPlatformsByCategory query — filters by category arg. Create convex/seed.ts with seedPlatforms internalMutation that inserts ~40 platforms. Include real platforms: LinkedIn (DA: 98, social), Twitter/X (DA: 94, social), Facebook (DA: 96, social), Instagram (DA: 93, social), TikTok (DA: 92, social), YouTube (DA: 100, social), Google Reviews (DA: 99, review), Trustpilot (DA: 93, review), Glassdoor (DA: 91, professional), Indeed (DA: 95, professional), Pages Jaunes (DA: 85, directory), Yelp (DA: 94, review), GitHub (DA: 95, professional), Medium (DA: 95, social), Reddit (DA: 97, social), Pinterest (DA: 94, social), Viadeo (DA: 70, professional), Malt (DA: 72, professional), etc. Mark sherlockSupported for those in Sherlock's list. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-007",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create scan trigger action and webhook httpAction",
+      "description": "Create Convex action that calls the FastAPI scan service, and httpAction endpoint that receives webhook results from FastAPI.",
+      "scope": "Scans", "why": "This is the bridge between Convex and the scan engine — the core data flow.",
+      "type": "action", "priority": "critical", "complexity": "complex", "estimated_minutes": 40,
+      "risk": "medium",
+      "risk_description": "External HTTP calls can fail, webhook format must match exactly",
+      "risk_mitigation": "Use retry logic, validate webhook payload, log errors",
+      "depends_on": ["STEP-GLB-003", "STEP-BKD-002"], "blocks": ["STEP-INT-001"],
+      "parallel_group": null, "team_track": "backend", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/scanEngine.ts", "purpose": "Scan trigger action + webhook handler" },
+        { "path": "convex/http.ts", "purpose": "Convex HTTP routes for webhooks" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts", "convex/scans.ts"],
+      "acceptance_criteria": [
+        "triggerScan action sends HTTP POST to FastAPI with scanId and query",
+        "receiveScanResults httpAction validates payload and calls updateScanResults",
+        "HTTP route registered at POST /api/scan-webhook",
+        "Error handling: if FastAPI unreachable, mark scan as failed"
+      ],
+      "attention_points": ["httpAction must validate a shared secret/token", "Use internal mutations from the httpAction handler"],
+      "testing": ["Mock webhook call updates scan results"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "triggerScan is an action (can make HTTP calls). It calls fetch() to POST to SCAN_SERVICE_URL. receiveScanResults is httpAction on http.ts. Validate SCAN_WEBHOOK_SECRET. Parse body, call internal mutations to update scan.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": ["SCAN_SERVICE_URL", "SCAN_WEBHOOK_SECRET"],
+      "rollback": "Delete convex/scanEngine.ts and convex/http.ts",
+      "agent_prompt": "Create convex/scanEngine.ts with: 1) triggerScan action — args: scanId, query. Calls fetch(SCAN_SERVICE_URL + '/scan', { method: 'POST', body: { scanId, query, webhookUrl, secret } }). If fetch fails, call completeScan with status 'failed'. 2) Create convex/http.ts — register POST route '/api/scan-webhook'. The httpAction validates SCAN_WEBHOOK_SECRET from headers, parses body (scanId, type: 'partial' | 'complete', data), calls internal mutations updateScanResults or completeScan. Handle both partial updates and final completion. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts", "convex/scans.ts"]
+    },
+
+    {
+      "id": "STEP-BKD-008",
+      "phase": "backend", "layer": 2, "milestone": "M1",
+      "title": "Create scan timeout cron job",
+      "description": "Convex cron that runs every 5 minutes, checks for scans stuck in 'running' for > 10 minutes, marks them as 'failed'.",
+      "scope": "Scans", "why": "Prevents scans from being stuck forever if the scan service crashes.",
+      "type": "config", "priority": "medium", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-003", "STEP-BKD-002"], "blocks": [],
+      "parallel_group": null, "team_track": "backend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "convex/crons.ts", "purpose": "Scheduled cron jobs" }
+      ],
+      "files_to_modify": [], "files_to_read": ["convex/schema.ts", "convex/scans.ts"],
+      "acceptance_criteria": [
+        "Cron runs every 5 minutes",
+        "Finds scans with status 'running' and createdAt > 10 minutes ago",
+        "Marks them as 'failed' with error message 'Scan timeout'"
+      ],
+      "attention_points": ["Use Convex cronJobs API", "Query by status index"],
+      "testing": ["Cron registered in Convex dashboard"],
+      "verify_command": "npx convex dev --once",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Use cronJobs from convex/server. Define interval cron that calls an internalMutation. The mutation queries scans by_status index where status='running' and createdAt < Date.now() - 10*60*1000.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete convex/crons.ts",
+      "agent_prompt": "Create convex/crons.ts using Convex cronJobs API. Register a cron 'cleanup-stale-scans' running every 5 minutes. It calls an internalMutation that: 1) Queries scans with status 'running'. 2) Filters those where createdAt < Date.now() - 600000 (10 min). 3) Patches each to status 'failed', adds problemsDetected: [{ type: 'scan_error', description: 'Scan timeout - please retry', severity: 'warning' }]. Verify npx convex dev --once.",
+      "reference_files": ["convex/schema.ts", "convex/scans.ts"]
+    },
+
+    {
+      "id": "STEP-SCN-001",
+      "phase": "backend", "layer": 2, "milestone": "M2",
+      "title": "Initialize FastAPI scan service project",
+      "description": "Create the Python FastAPI project for the scan engine: project structure, requirements.txt, main.py with health endpoint, Docker setup.",
+      "scope": "Scan Engine", "why": "The scan service is a separate deployment — needs its own project structure.",
+      "type": "config", "priority": "critical", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": [], "blocks": ["STEP-SCN-002", "STEP-SCN-003", "STEP-SCN-004"],
+      "parallel_group": null, "team_track": "scan-engine", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "scan-service/main.py", "purpose": "FastAPI app entry point" },
+        { "path": "scan-service/requirements.txt", "purpose": "Python dependencies" },
+        { "path": "scan-service/Dockerfile", "purpose": "Container setup" },
+        { "path": "scan-service/.env.example", "purpose": "Env vars template" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "FastAPI app starts with uvicorn",
+        "GET /health returns 200",
+        "POST /scan endpoint stub exists (returns 202)",
+        "Dockerfile builds successfully"
+      ],
+      "attention_points": ["Use Python 3.11+", "Include sherlock-project in requirements"],
+      "testing": ["uvicorn scan-service.main:app runs", "curl localhost:8000/health returns 200"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "FastAPI with uvicorn. requirements.txt: fastapi, uvicorn, sherlock-project, httpx (for webhooks), python-dotenv. Dockerfile: python:3.11-slim, install requirements, expose 8000.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": ["WEBHOOK_SECRET", "MAX_CONCURRENT_SCANS"],
+      "rollback": "Delete scan-service/ directory",
+      "agent_prompt": "Create scan-service/ directory at project root. Create main.py with FastAPI app: GET /health (returns {'status': 'ok'}), POST /scan (stub: accepts {scanId, query, webhookUrl, secret}, returns 202). Create requirements.txt: fastapi, uvicorn[standard], sherlock-project, httpx, python-dotenv. Create Dockerfile: FROM python:3.11-slim, COPY requirements, pip install, COPY ., CMD uvicorn. Create .env.example with WEBHOOK_SECRET and MAX_CONCURRENT_SCANS=3.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-SCN-002",
+      "phase": "backend", "layer": 2, "milestone": "M2",
+      "title": "Implement Sherlock integration in scan service",
+      "description": "Integrate sherlock-project Python library to scan usernames across platforms. Run async, report results progressively.",
+      "scope": "Scan Engine", "why": "Sherlock is the core detection engine — 400+ platforms scanned.",
+      "type": "action", "priority": "critical", "complexity": "complex", "estimated_minutes": 45,
+      "risk": "medium",
+      "risk_description": "Sherlock is a CLI tool, wrapping it programmatically may have quirks",
+      "risk_mitigation": "Use sherlock's Python API directly, not subprocess. Test with known usernames.",
+      "depends_on": ["STEP-SCN-001"], "blocks": ["STEP-SCN-005"],
+      "parallel_group": null, "team_track": "scan-engine", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "scan-service/scanners/sherlock_scanner.py", "purpose": "Sherlock wrapper" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "sherlock_scanner.scan(username) returns list of {platform, url, found} results",
+        "Results sent progressively via webhook callback",
+        "Handles rate limiting and errors gracefully",
+        "Respects MAX_CONCURRENT_SCANS limit"
+      ],
+      "attention_points": ["Some platforms may block automated requests", "Use asyncio for concurrency"],
+      "testing": ["Scan 'test' username, verify results structure"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Import sherlock's Python module directly. Use async to run scan in background. Send partial results (batches of 20 platforms) to webhook. Handle connection errors per-platform gracefully.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete scan-service/scanners/sherlock_scanner.py",
+      "agent_prompt": "Create scan-service/scanners/sherlock_scanner.py. Import sherlock's Python API (sherlock_project). Create async function scan_username(username, callback) that: 1) Runs Sherlock scan on the username. 2) Collects results: [{platform, url, found: bool}]. 3) Every 20 results, calls callback(partial_results) to send progress. 4) Returns full results list. Handle per-platform errors gracefully (skip, don't crash). Use semaphore for MAX_CONCURRENT_SCANS.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-SCN-003",
+      "phase": "backend", "layer": 2, "milestone": "M2",
+      "title": "Implement Google search scanner",
+      "description": "Create Google search scanner that fetches first 20 results for a name query and performs basic sentiment analysis.",
+      "scope": "Scan Engine", "why": "Google results are 40% of the reputation score — the most visible to potential searchers.",
+      "type": "action", "priority": "critical", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "high",
+      "risk_description": "Google blocks automated scraping. Need API key or scraping strategy.",
+      "risk_mitigation": "Use Google Custom Search API ($5/1000 queries). Fallback: SerpAPI or scraping with rotation.",
+      "depends_on": ["STEP-SCN-001"], "blocks": ["STEP-SCN-005"],
+      "parallel_group": null, "team_track": "scan-engine", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "scan-service/scanners/google_scanner.py", "purpose": "Google search + sentiment" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "google_scanner.search(name) returns [{url, title, snippet, sentiment, position}]",
+        "Sentiment analysis: classify each result as positive/negative/neutral based on keywords",
+        "Returns top 20 results",
+        "Handles API errors gracefully"
+      ],
+      "attention_points": ["Need GOOGLE_API_KEY and GOOGLE_CX (Custom Search Engine ID)", "Sentiment can be basic keyword matching for MVP"],
+      "testing": ["Search a common name, verify results structure"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Use Google Custom Search JSON API. Sentiment: basic keyword lists (negative: 'arnaque', 'fraud', 'plainte', 'avis negatif', 'scam'; positive: 'expert', 'recommend', 'professionnel', '5 etoiles'). Default to 'neutral'.",
+      "code_patterns": [], "packages_needed": ["httpx"], "env_vars_needed": ["GOOGLE_API_KEY", "GOOGLE_CX"],
+      "rollback": "Delete scan-service/scanners/google_scanner.py",
+      "agent_prompt": "Create scan-service/scanners/google_scanner.py. 1) async search(name: str) → list of {url, title, snippet, sentiment, position}. Uses Google Custom Search JSON API (httpx). Fetches 20 results. 2) analyze_sentiment(title, snippet) → 'positive' | 'negative' | 'neutral'. Basic keyword matching: negative words (arnaque, fraud, plainte, scam, probleme, mauvais, negatif), positive words (expert, recommande, professionnel, excellent, 5 etoiles). Default 'neutral'. 3) Handle API errors: return empty list with error flag, don't crash. Env vars: GOOGLE_API_KEY, GOOGLE_CX.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-SCN-004",
+      "phase": "backend", "layer": 2, "milestone": "M2",
+      "title": "Implement webhook sender and score calculator",
+      "description": "Create webhook module that sends results to Convex httpAction, and score calculator that computes 0-100 reputation score.",
+      "scope": "Scan Engine", "why": "The webhook is the communication channel back to Convex. The score is the key metric shown to users.",
+      "type": "action", "priority": "high", "complexity": "moderate", "estimated_minutes": 25,
+      "risk": "low",
+      "depends_on": ["STEP-SCN-001", "STEP-BKD-002"], "blocks": ["STEP-SCN-005"],
+      "parallel_group": null, "team_track": "scan-engine", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "scan-service/webhook.py", "purpose": "Webhook sender to Convex" },
+        { "path": "scan-service/scoring.py", "purpose": "Reputation score calculator" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "webhook.send_partial(webhookUrl, secret, scanId, data) sends partial results",
+        "webhook.send_complete(webhookUrl, secret, scanId, finalData) sends completion",
+        "scoring.calculate(googleResults, platformResults, sentiment) returns 0-100",
+        "Score weights: Google negative 40%, coverage 20%, reviews 20%, sentiment 20%"
+      ],
+      "attention_points": ["Include SCAN_WEBHOOK_SECRET in headers", "Retry webhook on failure (3 attempts)"],
+      "testing": ["Calculate score with known inputs, verify expected output"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Webhook: httpx POST with Authorization header. Retry 3x with exponential backoff. Score: start at 100, deduct for negative Google results (-10 to -15 per result in top 10), add/deduct for platform coverage, reviews, sentiment.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete scan-service/webhook.py and scan-service/scoring.py",
+      "agent_prompt": "Create scan-service/webhook.py: async send_results(webhook_url, secret, scan_id, result_type, data). Uses httpx POST with header X-Webhook-Secret. Retry 3x with backoff on failure. result_type: 'partial' or 'complete'. Create scan-service/scoring.py: calculate_score(google_results, platform_results, sentiment) → int 0-100. Start at 100. Google (40%): each negative result in top 10 = -12 points. Coverage (20%): (found_profiles / 15 recommended) * 20, capped at 20. Reviews (20%): placeholder 15 (no review scraping in MVP). Sentiment (20%): (positive_count / total) * 20. Clamp final score to 0-100.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-SCN-005",
+      "phase": "backend", "layer": 2, "milestone": "M2",
+      "title": "Wire scan orchestrator: combine Sherlock + Google + scoring + webhook",
+      "description": "Create the main scan orchestrator that receives a scan request, runs Sherlock and Google in parallel, computes the score, sends results via webhook.",
+      "scope": "Scan Engine", "why": "This is the main pipeline — ties all scan components together into one flow.",
+      "type": "action", "priority": "critical", "complexity": "complex", "estimated_minutes": 35,
+      "risk": "high",
+      "risk_description": "Orchestrating parallel async tasks with progressive webhook updates",
+      "risk_mitigation": "Use asyncio.gather for parallelism, structured error handling per scanner",
+      "depends_on": ["STEP-SCN-002", "STEP-SCN-003", "STEP-SCN-004"], "blocks": ["STEP-INT-001"],
+      "parallel_group": null, "team_track": "scan-engine", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "scan-service/orchestrator.py", "purpose": "Scan pipeline orchestrator" }
+      ],
+      "files_to_modify": [
+        { "path": "scan-service/main.py", "what": "Wire POST /scan to orchestrator" }
+      ],
+      "files_to_read": ["scan-service/scanners/sherlock_scanner.py", "scan-service/scanners/google_scanner.py", "scan-service/webhook.py", "scan-service/scoring.py"],
+      "acceptance_criteria": [
+        "POST /scan launches scan in background (returns 202 immediately)",
+        "Sherlock and Google run in parallel via asyncio",
+        "Partial results sent to webhook as they come in",
+        "Final result includes score, all platform results, all Google results, sentiment summary",
+        "Max 3 concurrent scans enforced via semaphore"
+      ],
+      "attention_points": ["Background task — don't block the HTTP response", "Handle partial failures (if Google fails, still return Sherlock results)"],
+      "testing": ["Full scan flow with a test name"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Use FastAPI BackgroundTasks or asyncio.create_task. Semaphore(3) for concurrency. Run sherlock + google in parallel with asyncio.gather(return_exceptions=True). Compute score after both complete. Send final webhook with type 'complete'.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Revert scan-service/main.py, delete orchestrator.py",
+      "agent_prompt": "Create scan-service/orchestrator.py. async run_scan(scan_id, query, webhook_url, secret): 1) Run sherlock_scanner.scan(query) and google_scanner.search(query) in parallel with asyncio.gather. 2) Send partial results via webhook as they come (sherlock sends batches via callback). 3) After both complete, compute score via scoring.calculate(). 4) Build final payload: {scanId, googleResults, platformResults, sentiment, score, problemsDetected}. problemsDetected = results where sentiment is 'negative' or important profiles are missing. 5) Send complete webhook. Handle partial failures: if one scanner fails, still process the other. Update scan-service/main.py: POST /scan validates secret, checks semaphore (max 3), launches orchestrator.run_scan as background task, returns 202.",
+      "reference_files": ["scan-service/scanners/sherlock_scanner.py", "scan-service/scanners/google_scanner.py", "scan-service/webhook.py", "scan-service/scoring.py"]
+    },
+
+    {
+      "id": "STEP-LND-001",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create landing page with hero, scan CTA, and social proof",
+      "description": "Build the main landing page: hero section with headline + scan input, social proof stats, how it works section, pricing preview, FAQ.",
+      "scope": "Landing", "why": "This is the first impression — converts visitors into scan users.",
+      "type": "page", "priority": "critical", "complexity": "moderate", "estimated_minutes": 45,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-006"], "blocks": [],
+      "parallel_group": "frontend-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/page.tsx", "purpose": "Landing page" },
+        { "path": "src/components/landing/hero.tsx", "purpose": "Hero section with scan input" },
+        { "path": "src/components/landing/how-it-works.tsx", "purpose": "3-step process section" },
+        { "path": "src/components/landing/social-proof.tsx", "purpose": "Stats and trust signals" },
+        { "path": "src/components/landing/faq.tsx", "purpose": "FAQ accordion" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Hero with compelling headline, subheadline, and scan input (name field + CTA button)",
+        "Scan input redirects to /scan?q={name} on submit",
+        "Social proof section with placeholder stats",
+        "How it works: 3 steps (Scannez, Analysez, Agissez)",
+        "FAQ with 5-6 questions about e-reputation",
+        "Responsive and visually polished"
+      ],
+      "attention_points": ["Hero scan input is the #1 conversion element — make it prominent", "Use motion/react for subtle animations"],
+      "testing": ["Page renders, scan input submits to /scan"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Input", "source": "shadcn/ui" },
+        { "component": "Button", "source": "shadcn/ui" },
+        { "component": "Accordion", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Hero should feel urgent but professional", "Above the fold: headline + scan input + CTA"],
+      "brand_alignment": "Trustworthy, expert, protective — we help you take control",
+      "technical_notes": "Install shadcn accordion. motion/react for entrance animations. Server component with client scan input. French copy.",
+      "code_patterns": [], "packages_needed": ["motion"], "env_vars_needed": [],
+      "rollback": "Delete landing page files",
+      "agent_prompt": "Create the landing page. Install: pnpm dlx shadcn@latest add accordion; pnpm add motion. Create src/app/(public)/page.tsx composing Hero + HowItWorks + SocialProof + FAQ. Hero: 'Reprenez le controle de votre reputation en ligne' headline, 'Scannez votre presence en ligne en 30 secondes' sub, input field for name + 'Scanner maintenant' button. On submit, redirect to /scan?q={name}. HowItWorks: 3 cards (1. Scannez votre nom, 2. Analysez les resultats, 3. Agissez pour ameliorer). SocialProof: placeholder stats (400+ plateformes scannees, Score en 30s, etc). FAQ: 5 questions about e-reputation. Use motion/react for fade-in animations. French copy throughout. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-LND-002",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create scan page with input and streaming results",
+      "description": "Build /scan page: search input, real-time streaming results display with score gauge, platform list, Google results, and problems detected.",
+      "scope": "Scan", "why": "This is the core product experience — where users get immediate value.",
+      "type": "page", "priority": "critical", "complexity": "complex", "estimated_minutes": 60,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-006"], "blocks": ["STEP-INT-001"],
+      "parallel_group": "frontend-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/scan/page.tsx", "purpose": "Scan page" },
+        { "path": "src/components/scan/scan-input.tsx", "purpose": "Search input component" },
+        { "path": "src/components/scan/score-gauge.tsx", "purpose": "Animated score display (0-100)" },
+        { "path": "src/components/scan/platform-results.tsx", "purpose": "Platform presence list" },
+        { "path": "src/components/scan/google-results.tsx", "purpose": "Google search results with sentiment" },
+        { "path": "src/components/scan/problems-list.tsx", "purpose": "Detected problems list" },
+        { "path": "src/components/scan/scan-cta.tsx", "purpose": "CTA to create account after scan" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Input pre-filled from URL query param ?q=",
+        "Submitting triggers scan (Convex mutation)",
+        "Results stream in real-time as Convex document updates",
+        "Score gauge animates from 0 to final score",
+        "Platforms shown as grid: found (green) / not found (gray)",
+        "Google results show with sentiment badges (positive/negative/neutral)",
+        "Problems section highlights issues in red",
+        "CTA at bottom: 'Creez un compte pour sauvegarder ce rapport'"
+      ],
+      "attention_points": ["useQuery on the scan document for real-time updates", "Handle scan status: running (show progress), completed (show results), failed (show retry)"],
+      "testing": ["Scan page renders, results display with mock data"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Input", "source": "shadcn/ui" },
+        { "component": "Badge", "source": "shadcn/ui" },
+        { "component": "Card", "source": "shadcn/ui" },
+        { "component": "Progress", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Streaming feel: results should appear progressively", "Score gauge should be visually striking"],
+      "brand_alignment": "The 'wow moment' — this is where the user realizes the product's value",
+      "technical_notes": "Client component with useQuery on scan by ID. useMutation for startScan. Score gauge: CSS animated arc or SVG circle. Platforms: grid of small badges. Google results: card list with sentiment Badge variant.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete scan page files",
+      "agent_prompt": "Create the scan page. Install shadcn: pnpm dlx shadcn@latest add progress. Create src/app/(public)/scan/page.tsx — reads ?q= from searchParams, shows ScanInput (pre-filled). On submit: call startScan mutation, redirect to /scan/[id]. Create components: scan-input.tsx (input + button), score-gauge.tsx (SVG circle gauge 0-100, color coded: green 80+, yellow 60-79, orange 40-59, red <40), platform-results.tsx (grid of platform badges, green if found, gray if not), google-results.tsx (card list with sentiment Badge: green/red/gray), problems-list.tsx (alert cards for detected problems), scan-cta.tsx (Card with CTA 'Creez un compte gratuit pour sauvegarder'). Use 'use client' where needed for Convex hooks. French copy. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-LND-003",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create scan results page (/scan/[id])",
+      "description": "Build the shareable scan results page that shows full report for a specific scan ID.",
+      "scope": "Scan", "why": "Users share their scan results URL — this page must work without auth.",
+      "type": "page", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-LND-002"], "blocks": [],
+      "parallel_group": null, "team_track": "frontend", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/scan/[id]/page.tsx", "purpose": "Scan results by ID" }
+      ],
+      "files_to_modify": [], "files_to_read": ["src/components/scan/score-gauge.tsx"],
+      "acceptance_criteria": [
+        "Page loads scan by ID from Convex",
+        "Reuses all scan components (score, platforms, Google, problems)",
+        "Shows CTA to create account if not logged in",
+        "Shows 'Go to dashboard' if logged in",
+        "Real-time updates if scan is still running"
+      ],
+      "attention_points": ["Public page — no auth required", "SEO meta tags with scan query in title"],
+      "testing": ["Page renders with valid scan ID"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Client component. useQuery(api.scans.getScan, {id}). Reuse all scan/* components. Check auth state for CTA.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete the page file",
+      "agent_prompt": "Create src/app/(public)/scan/[id]/page.tsx. Client component that: 1) Gets scanId from params. 2) useQuery(api.scans.getScan, {id: scanId}). 3) If scan not found, show 'Scan non trouve'. 4) If scan.status === 'running', show loading with streaming components. 5) If completed, show full report: ScoreGauge, PlatformResults, GoogleResults, ProblemsList. 6) At bottom: if user is authenticated, show 'Aller au dashboard' link; else show ScanCta. Add generateMetadata for SEO: title 'Rapport de reputation — {query}'. Verify pnpm build.",
+      "reference_files": ["src/components/scan/score-gauge.tsx"]
+    },
+
+    {
+      "id": "STEP-LND-004",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create pricing page",
+      "description": "Build /pricing page with 3 tiers: Gratuit, Preventif, Defensif. FAQ pricing section.",
+      "scope": "Landing", "why": "Users need to understand the value proposition and pricing before committing.",
+      "type": "page", "priority": "high", "complexity": "simple", "estimated_minutes": 25,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-006"], "blocks": [],
+      "parallel_group": "frontend-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/pricing/page.tsx", "purpose": "Pricing page" },
+        { "path": "src/components/pricing/pricing-card.tsx", "purpose": "Pricing tier card" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "3 pricing cards: Gratuit (0EUR), Preventif (~150EUR/mois), Defensif (a partir de 800EUR)",
+        "Feature lists for each tier",
+        "CTA buttons: Gratuit → 'Commencer gratuitement', Preventif → 'Contactez-nous', Defensif → 'Reserver un appel'",
+        "FAQ section with pricing questions"
+      ],
+      "attention_points": ["Defensif is per-project, not subscription", "No Stripe integration yet — CTAs link to /contact"],
+      "testing": ["Page renders with 3 cards"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Card", "source": "shadcn/ui" },
+        { "component": "Badge", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Highlight Preventif as 'Populaire'", "Responsive: stack cards on mobile"],
+      "brand_alignment": "Transparent pricing, professional",
+      "technical_notes": "Server component. French copy. Cards with check/x icons for features. Preventif card highlighted with primary border.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete pricing files",
+      "agent_prompt": "Create src/app/(public)/pricing/page.tsx and src/components/pricing/pricing-card.tsx. PricingCard: props (name, price, period, features[], cta, ctaHref, highlighted). Page: 3 cards. Gratuit: 0EUR, features (Scan illimite, Dashboard basique, Score de reputation, Resultats Google + reseaux). Preventif: 150EUR/mois, 'Populaire' badge, features (Tout de Gratuit +, Monitoring 24/7, Alertes email + in-app, Credits creation profils, Rapports mensuels). Defensif: 'A partir de 800EUR', 'Par projet', features (Diagnostic expert, Suppression de contenus, Creation de profils strategiques, Accompagnement personnalise, Suivi du projet). Add generateMetadata for SEO. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-LND-005",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create contact page with Cal.com embed",
+      "description": "Build /contact page with contact form and Cal.com calendar embed for booking diagnostic calls.",
+      "scope": "Landing", "why": "Contact page is the conversion point for defensive (high-value) prospects.",
+      "type": "page", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-006"], "blocks": [],
+      "parallel_group": "frontend-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/contact/page.tsx", "purpose": "Contact page" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Contact form: name, email, message, submit button",
+        "Cal.com embed for booking calls (or placeholder if no Cal.com account yet)",
+        "Form submits to a Convex mutation or email service"
+      ],
+      "attention_points": ["Cal.com embed script from @calcom/embed-react", "Form validation with basic checks"],
+      "testing": ["Page renders, form submits"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [
+        { "component": "Input", "source": "shadcn/ui" },
+        { "component": "Textarea", "source": "shadcn/ui" },
+        { "component": "Button", "source": "shadcn/ui" }
+      ],
+      "ux_notes": ["Two columns on desktop: form left, calendar right"],
+      "brand_alignment": "Accessible, professional",
+      "technical_notes": "Install shadcn textarea. Cal.com: use @calcom/embed-react or simple iframe. Form can log to console for MVP (no email service yet).",
+      "code_patterns": [], "packages_needed": ["@calcom/embed-react"], "env_vars_needed": ["NEXT_PUBLIC_CALCOM_LINK"],
+      "rollback": "Delete contact page",
+      "agent_prompt": "Install shadcn textarea: pnpm dlx shadcn@latest add textarea. Create src/app/(public)/contact/page.tsx. Two-column layout on desktop. Left: contact form (name, email, message fields + 'Envoyer' button). Form logs to console for MVP. Right: Cal.com embed placeholder (div with text 'Calendrier de reservation — a configurer' and env var NEXT_PUBLIC_CALCOM_LINK check). If Cal.com link exists, embed calendar; else show placeholder. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-LND-006",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Create blog infrastructure with MDX",
+      "description": "Set up MDX blog infrastructure: configure next-mdx-remote or @next/mdx, create blog listing page, blog post page, and 2 sample articles.",
+      "scope": "Blog", "why": "Blog is the SEO acquisition channel — drives organic traffic to the scan.",
+      "type": "page", "priority": "medium", "complexity": "moderate", "estimated_minutes": 35,
+      "risk": "low",
+      "depends_on": ["STEP-GLB-006"], "blocks": [],
+      "parallel_group": "frontend-parallel-1", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/blog/page.tsx", "purpose": "Blog listing page" },
+        { "path": "src/app/(public)/blog/[slug]/page.tsx", "purpose": "Blog post page" },
+        { "path": "src/lib/mdx.ts", "purpose": "MDX utility functions" },
+        { "path": "content/blog/comment-supprimer-avis-google.mdx", "purpose": "Sample blog post" },
+        { "path": "content/blog/proteger-reputation-en-ligne.mdx", "purpose": "Sample blog post" }
+      ],
+      "files_to_modify": [
+        { "path": "next.config.ts", "what": "Configure MDX support" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "MDX files in content/blog/ render as blog posts",
+        "/blog lists all posts with title, date, excerpt",
+        "/blog/[slug] renders full post with proper typography",
+        "Each post includes a CTA scan banner",
+        "2 sample articles with realistic SEO content"
+      ],
+      "attention_points": ["Use gray-matter for frontmatter parsing", "MDX components: custom heading, CTA banner"],
+      "testing": ["/blog lists 2 posts", "/blog/comment-supprimer-avis-google renders"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": ["Clean typography, readable line width (65ch)"], "brand_alignment": "Expert content, SEO-focused",
+      "technical_notes": "Use next-mdx-remote for flexibility. Frontmatter: title, date, excerpt, author. MDX components map: h1-h6 with proper styling, CTA component that links to /scan.",
+      "code_patterns": [], "packages_needed": ["next-mdx-remote", "gray-matter"], "env_vars_needed": [],
+      "rollback": "Delete blog files and MDX config",
+      "agent_prompt": "Install: pnpm add next-mdx-remote gray-matter. Create src/lib/mdx.ts: functions to list all MDX files from content/blog/, parse frontmatter, get post by slug. Create src/app/(public)/blog/page.tsx: lists all posts (Card with title, date, excerpt, 'Lire' link). Create src/app/(public)/blog/[slug]/page.tsx: renders full MDX post with custom components (headings, CTA scan banner). Create 2 sample posts in content/blog/: 1) comment-supprimer-avis-google.mdx (600 words, SEO-optimized), 2) proteger-reputation-en-ligne.mdx (600 words). Each post has frontmatter: title, date, excerpt, author. Include scan CTA within posts. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-LND-007",
+      "phase": "pages", "layer": 5, "milestone": "M3",
+      "title": "Add SEO metadata, sitemap, and robots.txt",
+      "description": "Add proper SEO metadata to all public pages, generate sitemap.xml, configure robots.txt.",
+      "scope": "SEO", "why": "SEO is the primary acquisition channel — proper meta tags and sitemap are essential.",
+      "type": "config", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-LND-001", "STEP-LND-002", "STEP-LND-004", "STEP-LND-005", "STEP-LND-006"], "blocks": [],
+      "parallel_group": null, "team_track": "frontend", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/sitemap.ts", "purpose": "Dynamic sitemap generation" },
+        { "path": "src/app/robots.ts", "purpose": "Robots.txt configuration" }
+      ],
+      "files_to_modify": [
+        { "path": "src/app/layout.tsx", "what": "Add global metadata (title template, description, OG image)" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Global metadata with title template: '%s | MyDigitalReputation'",
+        "Each public page has unique title and description",
+        "sitemap.xml includes all public routes + blog posts",
+        "robots.txt allows all crawlers, points to sitemap"
+      ],
+      "attention_points": ["Don't index /dashboard/* pages", "Blog posts should be in sitemap dynamically"],
+      "testing": ["/sitemap.xml returns valid XML", "/robots.txt returns valid robots"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Next.js metadata API: export const metadata in layout.tsx, generateMetadata in pages. Sitemap: Next.js sitemap() function. Robots: Next.js robots() function. Disallow /dashboard/*.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete sitemap.ts, robots.ts, revert layout.tsx",
+      "agent_prompt": "Create src/app/sitemap.ts: returns sitemap with all public URLs (/, /scan, /pricing, /contact, /blog, each blog post). Create src/app/robots.ts: allow all, disallow /dashboard/*, point to sitemap. Update src/app/layout.tsx metadata: title template '%s | MyDigitalReputation', description about e-reputation management, OG defaults. Verify each public page has generateMetadata with unique title/description. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-001",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create dashboard overview page",
+      "description": "Build the main /dashboard page: reputation score card, recent alerts, quick actions, scan history summary.",
+      "scope": "Dashboard", "why": "First page users see after login — needs to show value immediately.",
+      "type": "page", "priority": "critical", "complexity": "moderate", "estimated_minutes": 35,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-001", "STEP-BKD-002"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/page.tsx", "purpose": "Dashboard overview" },
+        { "path": "src/components/dashboard/score-card.tsx", "purpose": "Large score display" },
+        { "path": "src/components/dashboard/recent-alerts.tsx", "purpose": "Recent alerts widget" },
+        { "path": "src/components/dashboard/quick-actions.tsx", "purpose": "Action buttons" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Score card shows latest scan score with color coding",
+        "Recent alerts shows last 5 alerts with severity badges",
+        "Quick actions: 'Nouveau scan', 'Creer un profil', 'Demander un nettoyage'",
+        "If no scan yet, show CTA to run first scan"
+      ],
+      "attention_points": ["Handle empty state (no scans yet)", "Use useQuery for real-time data"],
+      "testing": ["Dashboard renders with and without data"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Card", "source": "shadcn/ui" }],
+      "ux_notes": ["Grid layout: score card top-left (large), alerts top-right, actions bottom"],
+      "brand_alignment": "Clean, informative, actionable",
+      "technical_notes": "Client component. useQuery for user, latest scan, recent alerts. Grid layout with responsive breakpoints.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete dashboard page files",
+      "agent_prompt": "Create src/app/dashboard/page.tsx with grid layout. Create score-card.tsx: shows latest scan score as big number with ScoreGauge (reuse from scan components), date of last scan, 'Relancer un scan' button. Create recent-alerts.tsx: shows last 5 alerts with severity badges and time ago. Create quick-actions.tsx: 3 action cards (Nouveau scan → /dashboard/scans, Creer un profil → /dashboard/profiles, Nettoyage → /dashboard/projects). Handle empty state: if no scans, show card 'Lancez votre premier scan' with CTA. All useQuery from Convex. French copy. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-002",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create scans history page (/dashboard/scans)",
+      "description": "Build scan history page: list of past scans, score evolution, ability to launch new scan.",
+      "scope": "Dashboard", "why": "Users need to see their scan history and track score changes over time.",
+      "type": "page", "priority": "high", "complexity": "simple", "estimated_minutes": 25,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-002"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/scans/page.tsx", "purpose": "Scans history" },
+        { "path": "src/components/dashboard/scan-list.tsx", "purpose": "Scan history list" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Lists all user scans with date, query, score, status",
+        "Click on scan opens /scan/[id]",
+        "New scan button at top",
+        "Empty state if no scans"
+      ],
+      "attention_points": ["Sort by createdAt desc"],
+      "testing": ["Page renders with scan list"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Table", "source": "shadcn/ui" }],
+      "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Install shadcn table. useQuery(api.scans.getUserScans). Table with columns: date, query, score (badge), status (badge), action (view link).",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete scans page files",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add table. Create src/app/dashboard/scans/page.tsx. Header: 'Historique des scans' + 'Nouveau scan' button (opens scan input dialog or redirects to /scan). Create scan-list.tsx: Table with columns Date (formatted), Recherche (query), Score (color-coded badge), Statut (running/completed/failed badge), Actions (link to /scan/[id]). useQuery(api.scans.getUserScans). Empty state: 'Aucun scan — Lancez votre premier scan'. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-003",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create new scan dialog/flow from dashboard",
+      "description": "Build the flow to launch a new scan from the dashboard: dialog with name input, triggers scan, redirects to results.",
+      "scope": "Dashboard", "why": "Users need to run new scans from within the authenticated dashboard.",
+      "type": "component", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-002"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/components/dashboard/new-scan-dialog.tsx", "purpose": "New scan dialog" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Dialog with name/pseudo input and 'Scanner' button",
+        "Calls startScan mutation with userId",
+        "Redirects to /scan/[id] after creation",
+        "Loading state during scan creation"
+      ],
+      "attention_points": ["Include userId in startScan for authenticated scans"],
+      "testing": ["Dialog opens, submits, redirects"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Dialog", "source": "shadcn/ui" }],
+      "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Install shadcn dialog. useMutation(api.scans.startScan). On success, router.push(/scan/[id]).",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete dialog component",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add dialog. Create src/components/dashboard/new-scan-dialog.tsx. Dialog with: title 'Nouveau scan', input for name/pseudo, 'Scanner' button. On submit: call startScan mutation with query and userId from auth. On success: router.push('/scan/' + scanId). Loading state on button during submission. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-004",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create profiles management page (/dashboard/profiles)",
+      "description": "Build profiles page: list of created profiles, suggested platforms to create profiles on, with guides.",
+      "scope": "Dashboard", "why": "Profile creation is a monetized action — this page drives revenue.",
+      "type": "page", "priority": "high", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-003", "STEP-BKD-006"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/profiles/page.tsx", "purpose": "Profiles management" },
+        { "path": "src/components/dashboard/profile-card.tsx", "purpose": "Profile card component" },
+        { "path": "src/components/dashboard/suggested-platforms.tsx", "purpose": "Platform suggestions" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Shows created profiles with platform, URL, status",
+        "Shows suggested platforms sorted by domain authority",
+        "Each suggestion has 'Creer ce profil' button (deducts credit)",
+        "Credits remaining displayed prominently",
+        "Empty state for no profiles"
+      ],
+      "attention_points": ["Check credits before allowing creation", "Show 'Pas assez de credits' if credits = 0"],
+      "testing": ["Page renders, create profile works"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Card", "source": "shadcn/ui" }, { "component": "Badge", "source": "shadcn/ui" }],
+      "ux_notes": ["Two sections: 'Mes profils' and 'Plateformes suggerees'"],
+      "brand_alignment": "Actionable, clear progression",
+      "technical_notes": "useQuery for getUserProfiles and getSuggestedProfiles. useMutation for createProfile. Show toast on success/error.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete profiles page files",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add tabs. Create src/app/dashboard/profiles/page.tsx with two tabs: 'Mes profils' and 'Plateformes suggerees'. Create profile-card.tsx: shows platform name, icon, URL, status badge. Create suggested-platforms.tsx: grid of platform cards sorted by DA, each with 'Creer ce profil' button that calls createProfile mutation. Show credits counter at top. If credits = 0, disable buttons and show 'Passez au plan Preventif pour obtenir des credits'. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-005",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create alerts page (/dashboard/alerts)",
+      "description": "Build alerts center: list of alerts with severity filtering, mark as read, real-time updates.",
+      "scope": "Dashboard", "why": "Alerts keep users engaged and demonstrate ongoing monitoring value.",
+      "type": "page", "priority": "medium", "complexity": "simple", "estimated_minutes": 25,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-005"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/alerts/page.tsx", "purpose": "Alerts center" },
+        { "path": "src/components/dashboard/alert-item.tsx", "purpose": "Alert list item" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Lists all alerts sorted by date",
+        "Filter by severity (all, info, warning, critical)",
+        "Mark as read (single and all)",
+        "Unread alerts highlighted",
+        "Empty state: 'Aucune alerte — votre reputation est tranquille'"
+      ],
+      "attention_points": ["Real-time via useQuery — new alerts appear instantly"],
+      "testing": ["Page renders, mark read works"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Badge", "source": "shadcn/ui" }],
+      "ux_notes": ["Severity colors: info=blue, warning=yellow, critical=red"],
+      "brand_alignment": "",
+      "technical_notes": "useQuery(api.alerts.getUserAlerts). useMutation for markAlertRead, markAllAlertsRead. Filter with local state.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete alerts page files",
+      "agent_prompt": "Create src/app/dashboard/alerts/page.tsx. Header: 'Centre d'alertes' + 'Tout marquer comme lu' button. Filter tabs: Toutes, Info, Avertissement, Critique. Create alert-item.tsx: shows severity badge, title, source, time ago, link URL. Unread items have left border accent. Click marks as read. useQuery(api.alerts.getUserAlerts). Filter with local state. Empty state with shield icon and text. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-006",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create projects page (/dashboard/projects)",
+      "description": "Build projects page: list of cleanup projects with status, detail page with timeline.",
+      "scope": "Dashboard", "why": "Projects track the high-value cleanup service — users need visibility on progress.",
+      "type": "page", "priority": "high", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-004"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/projects/page.tsx", "purpose": "Projects list" },
+        { "path": "src/app/dashboard/projects/[id]/page.tsx", "purpose": "Project detail" },
+        { "path": "src/components/dashboard/project-card.tsx", "purpose": "Project summary card" },
+        { "path": "src/components/dashboard/project-timeline.tsx", "purpose": "Project steps timeline" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Projects list shows all user projects with status badge and date",
+        "Project detail shows timeline of steps, contents to remove with status",
+        "'Nouveau projet' button leads to /dashboard/projects/new (links to Cal.com)",
+        "Empty state with CTA"
+      ],
+      "attention_points": ["Status flow: pending_call → quoted → in_progress → completed"],
+      "testing": ["Projects page renders, detail page renders"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Card", "source": "shadcn/ui" }],
+      "ux_notes": ["Timeline with vertical line and status dots"],
+      "brand_alignment": "Transparency and trust — show progress clearly",
+      "technical_notes": "useQuery for getUserProjects, getProject. Timeline component with step status icons. New project: link to /contact for Cal.com booking.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete projects page files",
+      "agent_prompt": "Create projects list page and detail page. List: cards showing project status badge, creation date, number of contents to remove. Detail: project-timeline.tsx showing steps as vertical timeline (dot + line, status color: pending gray, in_progress blue, done green). Contents table: URL, type, status badge. Header with project status and price if quoted. 'Nouveau projet' button links to /contact. Empty state: 'Pas de projet en cours — Besoin de nettoyer votre reputation? Reservez un appel.' Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-007",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Create settings page (/dashboard/settings)",
+      "description": "Build settings page: account info (from Clerk), current plan display, notification preferences placeholder.",
+      "scope": "Dashboard", "why": "Users need to manage their account and see their plan status.",
+      "type": "page", "priority": "medium", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-001"], "blocks": [],
+      "parallel_group": "frontend-parallel-2", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/settings/page.tsx", "purpose": "Settings page" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Shows user profile info (name, email) from Clerk",
+        "Shows current plan with upgrade CTA",
+        "Shows credits balance",
+        "Notification preferences (placeholder toggles)",
+        "Delete account button (placeholder)"
+      ],
+      "attention_points": ["Use Clerk UserProfile component or custom display"],
+      "testing": ["Page renders with user info"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Card", "source": "shadcn/ui" }, { "component": "Switch", "source": "shadcn/ui" }],
+      "ux_notes": ["Sections: Profil, Plan & Credits, Notifications, Danger Zone"],
+      "brand_alignment": "",
+      "technical_notes": "Install shadcn switch. Use Clerk's useUser() for profile data. Plan info from Convex user record.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete settings page",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add switch. Create src/app/dashboard/settings/page.tsx with sections: 1) Profil — name, email from Clerk useUser(). 2) Plan & Credits — current plan badge, credits count, 'Passer au plan Preventif' CTA if free. 3) Notifications — placeholder switches (Email alerts, In-app alerts). 4) Zone de danger — 'Supprimer mon compte' destructive button (placeholder alert on click). Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-DSH-008",
+      "phase": "pages", "layer": 5, "milestone": "M4",
+      "title": "Wire alert bell in header with unread count",
+      "description": "Connect the header alert bell icon to real Convex data: show unread count badge, dropdown with recent alerts.",
+      "scope": "Dashboard", "why": "The alert bell is a key engagement signal — shows the app is working for the user.",
+      "type": "component", "priority": "medium", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-GLB-005", "STEP-BKD-005"], "blocks": [],
+      "parallel_group": null, "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/components/layout/alert-bell.tsx", "purpose": "Alert bell with dropdown" }
+      ],
+      "files_to_modify": [
+        { "path": "src/components/layout/header.tsx", "what": "Replace placeholder bell with AlertBell component" }
+      ],
+      "files_to_read": ["src/components/layout/header.tsx"],
+      "acceptance_criteria": [
+        "Bell icon shows red badge with unread count",
+        "Click opens popover with last 5 alerts",
+        "Each alert links to /dashboard/alerts",
+        "'Voir toutes les alertes' link at bottom"
+      ],
+      "attention_points": ["useQuery for getUnreadCount — real-time updates"],
+      "testing": ["Bell shows count, popover opens"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Popover", "source": "shadcn/ui" }],
+      "ux_notes": ["Badge hides when count = 0"],
+      "brand_alignment": "",
+      "technical_notes": "Install shadcn popover. useQuery(api.alerts.getUnreadCount) for badge. useQuery(api.alerts.getUserAlerts, {take: 5}) for dropdown list.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Revert header.tsx, delete alert-bell.tsx",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add popover. Create src/components/layout/alert-bell.tsx: Bell icon (lucide) with red badge showing unread count. Popover on click: shows last 5 alerts (title, severity, time ago). Footer: 'Voir toutes les alertes' link to /dashboard/alerts. Badge hidden when count = 0. Update header.tsx to use AlertBell component. Verify pnpm build.",
+      "reference_files": ["src/components/layout/header.tsx"]
+    },
+
+    {
+      "id": "STEP-INT-001",
+      "phase": "integration", "layer": 7, "milestone": "M5",
+      "title": "Wire full scan flow: public scan → Convex → FastAPI → webhook → results",
+      "description": "Connect all the pieces: scan page calls Convex mutation, which triggers FastAPI action, which sends results back via webhook, which updates the scan document in real-time.",
+      "scope": "Integration", "why": "This is THE core flow — everything we built must work together end-to-end.",
+      "type": "integration", "priority": "critical", "complexity": "complex", "estimated_minutes": 45,
+      "risk": "high",
+      "risk_description": "Multi-service integration with real-time updates — many things can go wrong",
+      "risk_mitigation": "Test each connection point independently first, add detailed logging",
+      "depends_on": ["STEP-BKD-002", "STEP-BKD-007", "STEP-SCN-005", "STEP-LND-002"], "blocks": ["STEP-INT-002"],
+      "parallel_group": null, "team_track": "integration", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [],
+      "files_to_modify": [
+        { "path": "src/app/(public)/scan/page.tsx", "what": "Wire to real Convex mutations" },
+        { "path": "convex/scanEngine.ts", "what": "Ensure action URL and secret are correct" }
+      ],
+      "files_to_read": ["convex/scanEngine.ts", "convex/http.ts", "convex/scans.ts", "scan-service/main.py"],
+      "acceptance_criteria": [
+        "User types name on /scan → scan starts → results stream in → final score displayed",
+        "Scan works for anonymous users (no auth required)",
+        "Scan works for authenticated users (userId attached)",
+        "Failed scan shows error message with retry button",
+        "Scan timeout cron marks stale scans as failed"
+      ],
+      "attention_points": ["CORS on Convex httpAction for webhook", "Env vars must match between Convex and FastAPI"],
+      "testing": ["Full end-to-end test with a real name"],
+      "verify_command": null,
+      "auto_verify": false,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Test flow: 1) Start FastAPI locally (uvicorn). 2) Start Convex dev. 3) Start Next.js dev. 4) Go to /scan, type a name, verify results appear. Debug: check Convex logs, FastAPI logs, webhook delivery.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": ["SCAN_SERVICE_URL", "SCAN_WEBHOOK_SECRET"],
+      "rollback": "N/A — integration step",
+      "agent_prompt": "Wire the full scan flow end-to-end. 1) Verify scan page calls startScan mutation correctly. 2) Verify triggerScan action sends correct HTTP request to FastAPI (SCAN_SERVICE_URL). 3) Verify FastAPI POST /scan processes the request and sends webhooks back. 4) Verify Convex httpAction at /api/scan-webhook receives and processes results. 5) Verify useQuery on scan document reflects real-time updates. 6) Test: anonymous scan, authenticated scan, scan failure, scan timeout. Add logging at each connection point for debugging. Fix any issues found.",
+      "reference_files": ["convex/scanEngine.ts", "convex/http.ts", "convex/scans.ts", "scan-service/main.py", "scan-service/orchestrator.py"]
+    },
+
+    {
+      "id": "STEP-INT-002",
+      "phase": "integration", "layer": 7, "milestone": "M5",
+      "title": "Wire anonymous scan → account creation → scan linking",
+      "description": "When an anonymous user creates an account after scanning, link the scan to their new user account.",
+      "scope": "Integration", "why": "The core conversion funnel — scan first, signup second. Must work seamlessly.",
+      "type": "integration", "priority": "high", "complexity": "moderate", "estimated_minutes": 25,
+      "risk": "low",
+      "depends_on": ["STEP-INT-001"], "blocks": [],
+      "parallel_group": null, "team_track": "integration", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [],
+      "files_to_modify": [
+        { "path": "src/components/scan/scan-cta.tsx", "what": "Pass scanId to signup flow" },
+        { "path": "src/app/(auth)/sign-up/[[...sign-up]]/page.tsx", "what": "Handle scanId redirect param" }
+      ],
+      "files_to_read": ["convex/scans.ts"],
+      "acceptance_criteria": [
+        "After signup from scan results page, scan is linked to new user",
+        "User sees the scan in their dashboard immediately",
+        "scanId preserved through signup redirect flow"
+      ],
+      "attention_points": ["Pass scanId as URL param through Clerk signup redirect", "Call linkScanToUser after first auth"],
+      "testing": ["Full flow: scan → signup → dashboard shows the scan"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Store scanId in URL or cookie. After Clerk signup redirect, check for pending scanId and call linkScanToUser mutation. Clerk afterSignUpUrl can include scanId.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Revert modified files",
+      "agent_prompt": "Wire the anonymous scan → account linking flow. 1) Update scan-cta.tsx: 'Creer un compte' button links to /sign-up?scanId={scanId}. 2) Update sign-up page: read scanId from searchParams, set Clerk afterSignUpUrl to /dashboard?linkScan={scanId}. 3) In dashboard layout or page, check for linkScan param on first load. If present, call linkScanToUser mutation to attach the scan to the newly created user. 4) Redirect to clean /dashboard URL after linking. Test the full flow. Verify pnpm build.",
+      "reference_files": ["convex/scans.ts", "src/components/scan/scan-cta.tsx"]
+    },
+
+    {
+      "id": "STEP-INT-003",
+      "phase": "integration", "layer": 7, "milestone": "M5",
+      "title": "Wire project creation from scan problems",
+      "description": "From the dashboard, allow users to create a cleanup project directly from detected problems in their scan.",
+      "scope": "Integration", "why": "Smooth conversion from 'I see problems' to 'fix them for me' — the defensive upsell.",
+      "type": "integration", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-DSH-001", "STEP-BKD-004"], "blocks": [],
+      "parallel_group": null, "team_track": "integration", "can_parallelize": false, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/components/dashboard/create-project-dialog.tsx", "purpose": "Create project from problems" }
+      ],
+      "files_to_modify": [
+        { "path": "src/components/dashboard/score-card.tsx", "what": "Add 'Nettoyer' CTA when problems detected" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "From score card or problems list, user can click 'Demander un nettoyage'",
+        "Dialog shows detected problems as contents to remove",
+        "Submitting creates a project with status pending_call",
+        "Redirects to /contact for booking after creation"
+      ],
+      "attention_points": ["Pre-fill contentsToRemove from scan problemsDetected"],
+      "testing": ["Create project from scan problems, verify in projects list"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Dialog", "source": "shadcn/ui" }],
+      "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Dialog shows checkboxes for each problem. User selects which to include. Creates project via createProject mutation. Toast success, then redirect to /contact.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete dialog, revert score-card",
+      "agent_prompt": "Create src/components/dashboard/create-project-dialog.tsx. Dialog shows detected problems from latest scan as checkboxes (pre-checked). User can deselect. 'Demander un nettoyage' button calls createProject mutation with selected contentsToRemove. On success: toast 'Projet cree — Reservez votre appel de diagnostic', redirect to /contact. Update score-card.tsx: if scan has problemsDetected.length > 0, show 'Demander un nettoyage' destructive button that opens this dialog. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-INT-004",
+      "phase": "integration", "layer": 7, "milestone": "M5",
+      "title": "Create user on first Convex auth sync",
+      "description": "Ensure that when a Clerk user first accesses the app, a Convex user record is created automatically.",
+      "scope": "Integration", "why": "Users need a Convex record to store their plan, credits, and link scans.",
+      "type": "integration", "priority": "critical", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-BKD-001"], "blocks": [],
+      "parallel_group": null, "team_track": "integration", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/hooks/use-store-user.ts", "purpose": "Hook to sync Clerk user to Convex" }
+      ],
+      "files_to_modify": [
+        { "path": "src/app/dashboard/layout.tsx", "what": "Add useStoreUser hook call" }
+      ],
+      "files_to_read": ["convex/users.ts"],
+      "acceptance_criteria": [
+        "First visit to /dashboard creates Convex user record",
+        "Subsequent visits reuse existing record",
+        "User record has correct name, email, plan='free', credits=0"
+      ],
+      "attention_points": ["Call createOrGetUser mutation on first render", "Idempotent — safe to call multiple times"],
+      "testing": ["Sign up, visit dashboard, verify Convex user exists"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "useStoreUser hook: calls createOrGetUser mutation with Clerk user identity. Run in dashboard layout so it fires on every authed page.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete hook, revert layout",
+      "agent_prompt": "Create src/hooks/use-store-user.ts: custom hook that uses Clerk useUser() + Convex useMutation(api.users.createOrGetUser). On mount (if user loaded), call the mutation with name and email from Clerk. Store in state to avoid re-calling. Add useStoreUser() call in src/app/dashboard/layout.tsx at the top of the component. Verify pnpm build.",
+      "reference_files": ["convex/users.ts"]
+    },
+
+    {
+      "id": "STEP-POL-001",
+      "phase": "polish", "layer": 8, "milestone": "M6",
+      "title": "Add loading states and skeletons across all pages",
+      "description": "Add loading.tsx files for route-level loading, and skeleton components for data-loading states in dashboard pages.",
+      "scope": "Polish", "why": "Loading states prevent layout shift and show the app is responsive.",
+      "type": "style", "priority": "high", "complexity": "simple", "estimated_minutes": 25,
+      "risk": "none",
+      "depends_on": ["STEP-DSH-001", "STEP-LND-002"], "blocks": [],
+      "parallel_group": "polish-parallel", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/dashboard/loading.tsx", "purpose": "Dashboard loading skeleton" },
+        { "path": "src/app/(public)/scan/loading.tsx", "purpose": "Scan page loading" },
+        { "path": "src/components/shared/skeleton-card.tsx", "purpose": "Reusable skeleton card" }
+      ],
+      "files_to_modify": [], "files_to_read": [],
+      "acceptance_criteria": [
+        "Dashboard shows skeleton while data loads",
+        "Scan page shows loading state while scan runs",
+        "All route transitions have loading.tsx fallbacks"
+      ],
+      "attention_points": ["Use shadcn Skeleton component"],
+      "testing": ["Throttle network, verify skeletons appear"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Skeleton", "source": "shadcn/ui" }],
+      "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Install shadcn skeleton. Create loading.tsx files that mirror page layout with skeleton placeholders.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete loading files",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add skeleton. Create loading.tsx for /dashboard (grid with skeleton cards matching score-card, alerts, actions layout). Create loading.tsx for /scan (skeleton input + skeleton results). Create skeleton-card.tsx: reusable Card with Skeleton children. Add loading states in dashboard pages for when useQuery returns undefined. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-POL-002",
+      "phase": "polish", "layer": 8, "milestone": "M6",
+      "title": "Add empty states with CTAs for all dashboard pages",
+      "description": "Add meaningful empty states to all dashboard pages when there's no data.",
+      "scope": "Polish", "why": "Empty states guide users to take action instead of showing blank pages.",
+      "type": "style", "priority": "medium", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-DSH-001", "STEP-DSH-002", "STEP-DSH-004", "STEP-DSH-005", "STEP-DSH-006"], "blocks": [],
+      "parallel_group": "polish-parallel", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/components/shared/empty-state.tsx", "purpose": "Reusable empty state component" }
+      ],
+      "files_to_modify": [
+        { "path": "src/app/dashboard/scans/page.tsx", "what": "Add empty state" },
+        { "path": "src/app/dashboard/profiles/page.tsx", "what": "Add empty state" },
+        { "path": "src/app/dashboard/alerts/page.tsx", "what": "Add empty state" },
+        { "path": "src/app/dashboard/projects/page.tsx", "what": "Add empty state" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Each dashboard page shows relevant empty state with icon, message, and CTA",
+        "Scans: 'Lancez votre premier scan'",
+        "Profiles: 'Commencez a creer votre presence'",
+        "Alerts: 'Aucune alerte — votre reputation est tranquille'",
+        "Projects: 'Pas de projet en cours'"
+      ],
+      "attention_points": ["Empty states should have an actionable CTA, not just text"],
+      "testing": ["Each page shows empty state when data is empty"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": ["Use lucide icons relevant to each section"],
+      "brand_alignment": "Encouraging, not empty-feeling",
+      "technical_notes": "Reusable EmptyState component: icon, title, description, action (button). Use in each dashboard page when data array is empty.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Revert page modifications, delete empty-state",
+      "agent_prompt": "Create src/components/shared/empty-state.tsx: props (icon: LucideIcon, title, description, actionLabel?, actionHref?). Centered layout with large icon, title, description, optional CTA button. Update all dashboard pages to use EmptyState when data is empty. Scans: Search icon, 'Lancez votre premier scan', CTA to new scan dialog. Profiles: UserPlus icon, 'Creer votre presence en ligne'. Alerts: Shield icon, 'Aucune alerte'. Projects: FolderOpen icon, 'Pas de projet en cours', CTA to /contact. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-POL-003",
+      "phase": "polish", "layer": 8, "milestone": "M6",
+      "title": "Add toast notifications for all mutations",
+      "description": "Add toast feedback for all user actions: scan started, profile created, project created, alert marked read, etc.",
+      "scope": "Polish", "why": "Users need immediate feedback that their actions were successful.",
+      "type": "style", "priority": "medium", "complexity": "simple", "estimated_minutes": 15,
+      "risk": "none",
+      "depends_on": ["STEP-DSH-001"], "blocks": [],
+      "parallel_group": "polish-parallel", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [],
+      "files_to_modify": [
+        { "path": "src/app/layout.tsx", "what": "Add Toaster component" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "Toaster component in root layout",
+        "Toast on: scan started, scan completed, scan failed, profile created, profile creation failed (no credits), project created, alerts marked read"
+      ],
+      "attention_points": ["Use shadcn toast/sonner", "Success = green, error = destructive"],
+      "testing": ["Trigger each action, verify toast appears"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [{ "component": "Sonner/Toast", "source": "shadcn/ui" }],
+      "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Install shadcn sonner. Add Toaster to root layout. Use toast() from sonner in mutation handlers.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Remove toaster, remove toast calls",
+      "agent_prompt": "Install: pnpm dlx shadcn@latest add sonner. Add <Toaster /> to src/app/layout.tsx. Add toast() calls after every mutation: startScan → 'Scan lance...', completeScan → 'Scan termine!', scan failed → 'Erreur — veuillez reessayer', createProfile → 'Profil cree! (-1 credit)', no credits → 'Pas assez de credits', createProject → 'Projet cree — reservez votre appel', markAllAlertsRead → 'Toutes les alertes marquees comme lues'. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-POL-004",
+      "phase": "polish", "layer": 8, "milestone": "M6",
+      "title": "Responsive and dark mode verification",
+      "description": "Verify all pages are responsive (mobile, tablet, desktop) and work in dark mode. Fix any issues.",
+      "scope": "Polish", "why": "Many users will access on mobile. Dark mode is expected in modern SaaS.",
+      "type": "style", "priority": "medium", "complexity": "moderate", "estimated_minutes": 30,
+      "risk": "none",
+      "depends_on": ["STEP-DSH-001", "STEP-LND-001"], "blocks": [],
+      "parallel_group": "polish-parallel", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/components/providers/theme-provider.tsx", "purpose": "Dark mode theme provider" }
+      ],
+      "files_to_modify": [
+        { "path": "src/app/layout.tsx", "what": "Add ThemeProvider" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "ThemeProvider with system/light/dark toggle",
+        "All pages render correctly at 375px, 768px, 1280px widths",
+        "Dark mode: no white flashes, all components themed",
+        "Sidebar collapses properly on mobile"
+      ],
+      "attention_points": ["Use next-themes for theme provider", "Check contrast ratios in dark mode"],
+      "testing": ["Test all pages at each breakpoint", "Toggle dark mode, verify no issues"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": [], "brand_alignment": "",
+      "technical_notes": "Install next-themes. ThemeProvider wraps children in layout. Add theme toggle in dashboard header and public navbar. Check all pages for responsive issues.",
+      "code_patterns": [], "packages_needed": ["next-themes"], "env_vars_needed": [],
+      "rollback": "Remove theme provider",
+      "agent_prompt": "Install: pnpm add next-themes. Create src/components/providers/theme-provider.tsx using next-themes ThemeProvider with attribute='class', defaultTheme='system'. Add to src/app/layout.tsx wrapping everything. Add theme toggle button (Sun/Moon icon) to dashboard header and public navbar. Verify all pages render correctly in dark mode (no white backgrounds, proper contrast). Check responsive: landing page, scan page, dashboard at 375px and 768px. Fix any layout issues. Verify pnpm build.",
+      "reference_files": []
+    },
+
+    {
+      "id": "STEP-POL-005",
+      "phase": "polish", "layer": 8, "milestone": "M6",
+      "title": "Add legal pages (CGU, politique de confidentialite) and final SEO pass",
+      "description": "Create minimal legal pages required for GDPR/RGPD compliance. Final SEO verification.",
+      "scope": "Polish", "why": "Legal compliance is mandatory before launch, especially with personal data.",
+      "type": "page", "priority": "high", "complexity": "simple", "estimated_minutes": 20,
+      "risk": "none",
+      "depends_on": ["STEP-LND-007"], "blocks": [],
+      "parallel_group": "polish-parallel", "team_track": "frontend", "can_parallelize": true, "isolation_required": false,
+      "files_to_create": [
+        { "path": "src/app/(public)/mentions-legales/page.tsx", "purpose": "Legal notices" },
+        { "path": "src/app/(public)/confidentialite/page.tsx", "purpose": "Privacy policy" },
+        { "path": "src/app/(public)/cgu/page.tsx", "purpose": "Terms of service" }
+      ],
+      "files_to_modify": [
+        { "path": "src/components/layout/footer.tsx", "what": "Add links to legal pages" }
+      ],
+      "files_to_read": [],
+      "acceptance_criteria": [
+        "3 legal pages with placeholder content (to be reviewed by legal)",
+        "Privacy policy mentions: data collected, retention (30 days for anonymous scans), right to delete",
+        "Footer links to all legal pages",
+        "All pages have proper SEO meta tags"
+      ],
+      "attention_points": ["Placeholder content — flag that these need legal review before launch"],
+      "testing": ["All legal pages render, footer links work"],
+      "verify_command": "pnpm build",
+      "auto_verify": true,
+      "design_refs": [], "ux_notes": ["Simple prose pages, no fancy design needed"],
+      "brand_alignment": "Trustworthy, transparent",
+      "technical_notes": "Simple server components with prose content. Use Tailwind typography plugin or basic prose styling. French content.",
+      "code_patterns": [], "packages_needed": [], "env_vars_needed": [],
+      "rollback": "Delete legal pages",
+      "agent_prompt": "Create 3 legal pages (server components, French): 1) mentions-legales: company info placeholder, hosting (Vercel), contact. 2) confidentialite: data collected (nom, email, resultats de scan), purpose (gestion e-reputation), retention (scans anonymes: 30 jours, comptes: duree d'inscription), right to delete, cookies. 3) cgu: conditions d'utilisation, description du service, responsabilites, limitation. Mark all as '[A FAIRE VALIDER PAR UN JURISTE]'. Update footer.tsx to link to these pages. Verify pnpm build.",
+      "reference_files": []
+    }
+  ]
+}

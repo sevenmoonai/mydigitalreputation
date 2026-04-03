@@ -1,0 +1,144 @@
+{
+  "$schema": "planner-v3.2",
+  "project": "MyDigitalReputation",
+  "scope": "Phase 1 — MVP",
+  "scope_description": "SaaS e-reputation: scan gratuit (Sherlock), dashboard, pages SEO, micro-service FastAPI, booking Cal.com",
+  "generated_at": "2026-04-03T14:10:00Z",
+  "planner_version": "3.2",
+
+  "context": {
+    "project_type": "Next.js 16 + Convex + Clerk + shadcn/ui",
+    "design_system": "shadcn/ui (theme TBD)",
+    "key_docs_read": ["docs/superpowers/specs/2026-04-03-my-digital-reputation-design.md"],
+    "mined_patterns": {
+      "note": "Greenfield project — no existing patterns to mine"
+    },
+    "gap_analysis": {
+      "note": "100% to build — empty project directory"
+    }
+  },
+
+  "team_config": {
+    "recommended_agents": 3,
+    "tracks": ["setup", "backend", "frontend", "scan-engine"],
+    "parallel_groups": ["backend-parallel-1", "frontend-parallel-1", "frontend-parallel-2"],
+    "model": "opus"
+  },
+
+  "critical_path": {
+    "steps": ["STEP-GLB-001", "STEP-GLB-003", "STEP-SCN-001", "STEP-SCN-003", "STEP-SCN-005", "STEP-DSH-001", "STEP-DSH-003", "STEP-INT-001"],
+    "total_minutes": 310,
+    "bottleneck": "STEP-SCN-005 (FastAPI scan service — complex, external dependencies)"
+  },
+
+  "milestones": [
+    {
+      "id": "M0",
+      "name": "Foundation",
+      "description": "Project setup, schema, types, auth, base layout",
+      "steps": ["STEP-GLB-001", "STEP-GLB-002", "STEP-GLB-003", "STEP-GLB-004", "STEP-GLB-005", "STEP-GLB-006"],
+      "checkpoint": "pnpm build passes, Convex dev runs, Clerk auth works",
+      "auto_verify": true
+    },
+    {
+      "id": "M1",
+      "name": "Backend Core",
+      "description": "All Convex queries, mutations, actions, httpActions",
+      "steps": ["STEP-BKD-001", "STEP-BKD-002", "STEP-BKD-003", "STEP-BKD-004", "STEP-BKD-005", "STEP-BKD-006", "STEP-BKD-007", "STEP-BKD-008"],
+      "checkpoint": "All Convex functions deployed, no type errors",
+      "auto_verify": true
+    },
+    {
+      "id": "M2",
+      "name": "Scan Engine",
+      "description": "FastAPI micro-service + Sherlock integration",
+      "steps": ["STEP-SCN-001", "STEP-SCN-002", "STEP-SCN-003", "STEP-SCN-004", "STEP-SCN-005"],
+      "checkpoint": "Scan service returns results for a test query",
+      "auto_verify": false
+    },
+    {
+      "id": "M3",
+      "name": "Public Pages",
+      "description": "Landing, scan, pricing, contact, blog — pages SEO",
+      "steps": ["STEP-LND-001", "STEP-LND-002", "STEP-LND-003", "STEP-LND-004", "STEP-LND-005", "STEP-LND-006", "STEP-LND-007"],
+      "checkpoint": "All public pages render, SEO meta tags present",
+      "auto_verify": true
+    },
+    {
+      "id": "M4",
+      "name": "Dashboard",
+      "description": "Authenticated dashboard pages — score, scans, profiles, projects, settings",
+      "steps": ["STEP-DSH-001", "STEP-DSH-002", "STEP-DSH-003", "STEP-DSH-004", "STEP-DSH-005", "STEP-DSH-006", "STEP-DSH-007", "STEP-DSH-008"],
+      "checkpoint": "Dashboard renders with mock data, all routes work",
+      "auto_verify": true
+    },
+    {
+      "id": "M5",
+      "name": "Integration & Wiring",
+      "description": "Connect scan → Convex → dashboard, auth guards, Cal.com embed",
+      "steps": ["STEP-INT-001", "STEP-INT-002", "STEP-INT-003", "STEP-INT-004"],
+      "checkpoint": "Full flow works: scan → signup → dashboard → book call",
+      "auto_verify": false
+    },
+    {
+      "id": "M6",
+      "name": "Polish & Ship",
+      "description": "Loading states, empty states, responsive, dark mode, SEO final",
+      "steps": ["STEP-POL-001", "STEP-POL-002", "STEP-POL-003", "STEP-POL-004", "STEP-POL-005"],
+      "checkpoint": "pnpm build passes, Lighthouse > 90, all pages responsive",
+      "auto_verify": true
+    }
+  ],
+
+  "summary": {
+    "total_steps": 43,
+    "by_phase": {
+      "setup": 6,
+      "backend": 8,
+      "scan-engine": 5,
+      "pages-public": 7,
+      "dashboard": 8,
+      "integration": 4,
+      "polish": 5
+    },
+    "by_milestone": { "M0": 6, "M1": 8, "M2": 5, "M3": 7, "M4": 8, "M5": 4, "M6": 5 },
+    "by_track": { "setup": 6, "backend": 13, "frontend": 20, "scan-engine": 4 },
+    "critical_path": ["STEP-GLB-001", "STEP-GLB-003", "STEP-SCN-001", "STEP-SCN-005", "STEP-DSH-001", "STEP-INT-001"],
+    "estimated_total_minutes": 1260,
+    "estimated_with_team_minutes": 540,
+    "high_risk_steps": ["STEP-SCN-003", "STEP-SCN-005"],
+    "max_parallelism": 3
+  },
+
+  "chunks": {
+    "chunk_size": 50,
+    "total_chunks": 1,
+    "files": [
+      {
+        "file": "step-01.json",
+        "step_range": "STEP-GLB-001 to STEP-POL-005",
+        "count": 43,
+        "milestones": ["M0", "M1", "M2", "M3", "M4", "M5", "M6"]
+      }
+    ],
+    "step_index": {
+      "STEP-GLB-001": "step-01.json", "STEP-GLB-002": "step-01.json", "STEP-GLB-003": "step-01.json",
+      "STEP-GLB-004": "step-01.json", "STEP-GLB-005": "step-01.json", "STEP-GLB-006": "step-01.json",
+      "STEP-BKD-001": "step-01.json", "STEP-BKD-002": "step-01.json", "STEP-BKD-003": "step-01.json",
+      "STEP-BKD-004": "step-01.json", "STEP-BKD-005": "step-01.json", "STEP-BKD-006": "step-01.json",
+      "STEP-BKD-007": "step-01.json", "STEP-BKD-008": "step-01.json",
+      "STEP-SCN-001": "step-01.json", "STEP-SCN-002": "step-01.json", "STEP-SCN-003": "step-01.json",
+      "STEP-SCN-004": "step-01.json", "STEP-SCN-005": "step-01.json",
+      "STEP-LND-001": "step-01.json", "STEP-LND-002": "step-01.json", "STEP-LND-003": "step-01.json",
+      "STEP-LND-004": "step-01.json", "STEP-LND-005": "step-01.json", "STEP-LND-006": "step-01.json",
+      "STEP-LND-007": "step-01.json",
+      "STEP-DSH-001": "step-01.json", "STEP-DSH-002": "step-01.json", "STEP-DSH-003": "step-01.json",
+      "STEP-DSH-004": "step-01.json", "STEP-DSH-005": "step-01.json", "STEP-DSH-006": "step-01.json",
+      "STEP-DSH-007": "step-01.json", "STEP-DSH-008": "step-01.json",
+      "STEP-INT-001": "step-01.json", "STEP-INT-002": "step-01.json", "STEP-INT-003": "step-01.json",
+      "STEP-INT-004": "step-01.json",
+      "STEP-POL-001": "step-01.json", "STEP-POL-002": "step-01.json", "STEP-POL-003": "step-01.json",
+      "STEP-POL-004": "step-01.json", "STEP-POL-005": "step-01.json"
+    }
+  }
+}

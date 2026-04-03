@@ -1,0 +1,130 @@
+{
+  "project": "MyDigitalReputation",
+  "scope": "Phase 1 — MVP",
+  "scope_description": "SaaS e-reputation: scan gratuit, dashboard, pages SEO, micro-service FastAPI",
+  "generated_at": "2026-04-03T14:10:00Z",
+  "last_updated": "2026-04-03T14:10:00Z",
+  "planner_version": "3.2",
+
+  "stats": {
+    "total": 43,
+    "completed": 0,
+    "in_progress": 0,
+    "pending": 43,
+    "blocked": 0,
+    "skipped": 0,
+    "failed": 0,
+    "progress_percentage": 0,
+    "estimated_remaining_minutes": 1260,
+    "velocity_steps_per_hour": 0,
+    "estimated_completion": null
+  },
+
+  "estimation": {
+    "total_estimated_minutes": 1260,
+    "total_actual_minutes": 0,
+    "accuracy_ratio": null,
+    "overestimated_count": 0,
+    "underestimated_count": 0,
+    "biggest_miss": null,
+    "calibration_factor": 1.0
+  },
+
+  "milestones": {
+    "M0": { "name": "Foundation", "description": "Project setup, schema, types, auth, base layout", "total": 6, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "pnpm build + npx convex dev" },
+    "M1": { "name": "Backend Core", "description": "All Convex functions", "total": 8, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "npx convex dev --once" },
+    "M2": { "name": "Scan Engine", "description": "FastAPI + Sherlock", "total": 5, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Scan returns results" },
+    "M3": { "name": "Public Pages", "description": "Landing, scan, pricing, blog", "total": 7, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "All pages render" },
+    "M4": { "name": "Dashboard", "description": "All dashboard pages", "total": 8, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Dashboard functional" },
+    "M5": { "name": "Integration", "description": "Wire scan flow, auth sync, project creation", "total": 4, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "Full flow works" },
+    "M6": { "name": "Polish & Ship", "description": "Loading states, empty states, responsive, legal", "total": 5, "completed": 0, "percentage": 0, "status": "pending", "checkpoint": "pnpm build + Lighthouse > 90" }
+  },
+
+  "phases": {
+    "setup": { "total": 6, "completed": 0, "percentage": 0 },
+    "backend": { "total": 8, "completed": 0, "percentage": 0 },
+    "scan-engine": { "total": 5, "completed": 0, "percentage": 0 },
+    "pages": { "total": 15, "completed": 0, "percentage": 0 },
+    "integration": { "total": 4, "completed": 0, "percentage": 0 },
+    "polish": { "total": 5, "completed": 0, "percentage": 0 }
+  },
+
+  "team": {
+    "active": false,
+    "team_name": null,
+    "agents": [],
+    "started_at": null,
+    "parallel_efficiency": 0
+  },
+
+  "current": {
+    "step_id": null,
+    "step_title": null,
+    "started_at": null,
+    "milestone": null
+  },
+
+  "next_actionable": ["STEP-GLB-001"],
+
+  "risks": {
+    "high_risk_pending": 2,
+    "high_risk_steps": ["STEP-SCN-003", "STEP-SCN-005"]
+  },
+
+  "drift": {
+    "last_check": null,
+    "files_changed_outside_plan": [],
+    "steps_potentially_affected": [],
+    "replan_recommended": false
+  },
+
+  "steps": {
+    "STEP-GLB-001": { "status": "pending" },
+    "STEP-GLB-002": { "status": "pending" },
+    "STEP-GLB-003": { "status": "pending" },
+    "STEP-GLB-004": { "status": "pending" },
+    "STEP-GLB-005": { "status": "pending" },
+    "STEP-GLB-006": { "status": "pending" },
+    "STEP-BKD-001": { "status": "pending" },
+    "STEP-BKD-002": { "status": "pending" },
+    "STEP-BKD-003": { "status": "pending" },
+    "STEP-BKD-004": { "status": "pending" },
+    "STEP-BKD-005": { "status": "pending" },
+    "STEP-BKD-006": { "status": "pending" },
+    "STEP-BKD-007": { "status": "pending" },
+    "STEP-BKD-008": { "status": "pending" },
+    "STEP-SCN-001": { "status": "pending" },
+    "STEP-SCN-002": { "status": "pending" },
+    "STEP-SCN-003": { "status": "pending" },
+    "STEP-SCN-004": { "status": "pending" },
+    "STEP-SCN-005": { "status": "pending" },
+    "STEP-LND-001": { "status": "pending" },
+    "STEP-LND-002": { "status": "pending" },
+    "STEP-LND-003": { "status": "pending" },
+    "STEP-LND-004": { "status": "pending" },
+    "STEP-LND-005": { "status": "pending" },
+    "STEP-LND-006": { "status": "pending" },
+    "STEP-LND-007": { "status": "pending" },
+    "STEP-DSH-001": { "status": "pending" },
+    "STEP-DSH-002": { "status": "pending" },
+    "STEP-DSH-003": { "status": "pending" },
+    "STEP-DSH-004": { "status": "pending" },
+    "STEP-DSH-005": { "status": "pending" },
+    "STEP-DSH-006": { "status": "pending" },
+    "STEP-DSH-007": { "status": "pending" },
+    "STEP-DSH-008": { "status": "pending" },
+    "STEP-INT-001": { "status": "pending" },
+    "STEP-INT-002": { "status": "pending" },
+    "STEP-INT-003": { "status": "pending" },
+    "STEP-INT-004": { "status": "pending" },
+    "STEP-POL-001": { "status": "pending" },
+    "STEP-POL-002": { "status": "pending" },
+    "STEP-POL-003": { "status": "pending" },
+    "STEP-POL-004": { "status": "pending" },
+    "STEP-POL-005": { "status": "pending" }
+  },
+
+  "timeline": [
+    { "timestamp": "2026-04-03T14:10:00Z", "step_id": "ALL", "action": "created", "notes": "Plan generated: 43 steps, 7 milestones" }
+  ]
+}
