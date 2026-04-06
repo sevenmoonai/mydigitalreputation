@@ -19,41 +19,50 @@ http.route({
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const body = await request.json();
-    const { scanId, type } = body as {
-      scanId: string;
-      type: "results" | "complete" | "error";
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let body: any;
+    try {
+      body = await request.json();
+    } catch {
+      return new Response("Invalid JSON", { status: 400 });
+    }
+
+    const scanId = body?.scanId as string | undefined;
+    const type = body?.type as "results" | "complete" | "error" | undefined;
 
     if (!scanId || !type) {
       return new Response("Missing scanId or type", { status: 400 });
     }
 
-    const typedScanId = scanId as Id<"scans">;
+    try {
+      const typedScanId = scanId as Id<"scans">;
 
-    if (type === "results") {
-      await ctx.runMutation(internal.scans.updateScanResults, {
-        scanId: typedScanId,
-        googleResults: body.googleResults,
-        platformResults: body.platformResults,
-        sentiment: body.sentiment,
-        problemsDetected: body.problemsDetected,
-      });
-    } else if (type === "complete") {
-      await ctx.runMutation(internal.scans.completeScan, {
-        scanId: typedScanId,
-        score: body.score ?? 0,
-        status: "completed",
-      });
-    } else if (type === "error") {
-      await ctx.runMutation(internal.scans.completeScan, {
-        scanId: typedScanId,
-        score: 0,
-        status: "failed",
-      });
+      if (type === "results") {
+        await ctx.runMutation(internal.scans.updateScanResults, {
+          scanId: typedScanId,
+          googleResults: body.googleResults,
+          platformResults: body.platformResults,
+          sentiment: body.sentiment,
+          problemsDetected: body.problemsDetected,
+        });
+      } else if (type === "complete") {
+        await ctx.runMutation(internal.scans.completeScan, {
+          scanId: typedScanId,
+          score: (body.score as number) ?? 0,
+          status: "completed",
+        });
+      } else if (type === "error") {
+        await ctx.runMutation(internal.scans.completeScan, {
+          scanId: typedScanId,
+          score: 0,
+          status: "failed",
+        });
+      }
+
+      return new Response("OK", { status: 200 });
+    } catch {
+      return new Response("Internal error", { status: 500 });
     }
-
-    return new Response("OK", { status: 200 });
   }),
 });
 

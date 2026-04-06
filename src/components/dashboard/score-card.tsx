@@ -69,7 +69,7 @@ export function ScoreCard() {
         </Button>
       </CardHeader>
       <CardContent className="flex flex-col items-center gap-4">
-        <ScoreGauge score={latestScan.score!} />
+        <ScoreGauge score={latestScan.score ?? 0} />
         <p className="text-muted-foreground text-xs">
           Dernier scan : {scanDate}
         </p>

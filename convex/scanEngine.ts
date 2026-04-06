@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { action } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { ConvexError } from "convex/values";
 
 export const triggerScan = action({
@@ -7,7 +8,7 @@ export const triggerScan = action({
     scanId: v.id("scans"),
     query: v.string(),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
     const serviceUrl = process.env.SCAN_SERVICE_URL;
     if (!serviceUrl) throw new ConvexError("SCAN_SERVICE_URL non configuré");
 
@@ -15,22 +16,39 @@ export const triggerScan = action({
     if (!webhookSecret)
       throw new ConvexError("SCAN_WEBHOOK_SECRET non configuré");
 
-    const response = await fetch(`${serviceUrl}/api/scan`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    try {
+      const response = await fetch(`${serviceUrl}/api/scan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${webhookSecret}`,
+        },
+        body: JSON.stringify({
+          scanId: args.scanId,
+          query: args.query,
+        }),
+      });
+
+      if (!response.ok) {
+        await ctx.runMutation(internal.scans.completeScan, {
+          scanId: args.scanId,
+          score: 0,
+          status: "failed",
+        });
+        throw new ConvexError(
+          `Erreur du service de scan: ${response.status}`
+        );
+      }
+
+      return { triggered: true };
+    } catch (error) {
+      if (error instanceof ConvexError) throw error;
+      await ctx.runMutation(internal.scans.completeScan, {
         scanId: args.scanId,
-        query: args.query,
-        webhookSecret,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new ConvexError(
-        `Erreur du service de scan: ${response.status} ${response.statusText}`
-      );
+        score: 0,
+        status: "failed",
+      });
+      throw new ConvexError("Service de scan indisponible");
     }
-
-    return { triggered: true };
   },
 });

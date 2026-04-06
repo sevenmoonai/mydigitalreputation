@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { ConvexError } from "convex/values";
 
 export const createOrGetUser = mutation({
@@ -40,23 +40,17 @@ export const getUser = query({
   },
 });
 
-export const updateUserPlan = mutation({
+export const updateUserPlan = internalMutation({
   args: {
+    userId: v.id("users"),
     plan: v.union(v.literal("free"), v.literal("preventive")),
     credits: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError("Non authentifié");
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-
+    const user = await ctx.db.get(args.userId);
     if (!user) throw new ConvexError("Utilisateur introuvable");
 
-    await ctx.db.patch(user._id, {
+    await ctx.db.patch(args.userId, {
       plan: args.plan,
       ...(args.credits !== undefined ? { credits: args.credits } : {}),
     });

@@ -5,13 +5,22 @@ import { ConvexError } from "convex/values";
 export const startScan = mutation({
   args: {
     query: v.string(),
-    userId: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
     if (!args.query.trim()) throw new ConvexError("La requête ne peut pas être vide");
 
+    let userId = undefined;
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity) {
+      const user = await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+        .unique();
+      if (user) userId = user._id;
+    }
+
     const scanId = await ctx.db.insert("scans", {
-      userId: args.userId,
+      userId,
       query: args.query.trim(),
       status: "running",
       createdAt: Date.now(),
@@ -119,7 +128,20 @@ export const completeScan = internalMutation({
 export const getScan = query({
   args: { scanId: v.id("scans") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.scanId);
+    const scan = await ctx.db.get(args.scanId);
+    if (!scan) return null;
+
+    if (scan.userId) {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) return null;
+      const user = await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+        .unique();
+      if (!user || user._id !== scan.userId) return null;
+    }
+
+    return scan;
   },
 });
 

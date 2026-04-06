@@ -62,7 +62,8 @@ export default defineSchema({
     completedAt: v.optional(v.number()),
   })
     .index("by_userId", ["userId"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_status_createdAt", ["status", "createdAt"]),
 
   profiles: defineTable({
     userId: v.id("users"),
@@ -94,7 +95,9 @@ export default defineSchema({
     ),
     read: v.boolean(),
     createdAt: v.number(),
-  }).index("by_userId", ["userId"]),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_userId_read", ["userId", "read"]),
 
   projects: defineTable({
     userId: v.id("users"),
