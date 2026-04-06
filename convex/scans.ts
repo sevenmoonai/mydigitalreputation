@@ -58,6 +58,7 @@ export const updateScanResults = internalMutation({
         positive: v.number(),
         negative: v.number(),
         neutral: v.number(),
+        total: v.number(),
       })
     ),
     problemsDetected: v.optional(

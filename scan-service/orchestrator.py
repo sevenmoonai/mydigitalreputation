@@ -37,7 +37,7 @@ async def run_scan(
                 webhook_url,
                 secret,
                 scan_id,
-                "partial",
+                "results",
                 {"platformResults": partial},
             )
 
@@ -65,18 +65,27 @@ async def run_scan(
         # Problèmes détectés
         problems = _detect_problems(google_results, platform_results)
 
-        # Envoi du résultat complet
-        final_payload = {
-            "scanId": scan_id,
-            "googleResults": google_results,
-            "platformResults": platform_results,
-            "sentiment": sentiment,
-            "score": score,
-            "problemsDetected": problems,
-        }
-
+        # Envoi des résultats finaux (données)
         await send_results(
-            webhook_url, secret, scan_id, "complete", final_payload
+            webhook_url,
+            secret,
+            scan_id,
+            "results",
+            {
+                "googleResults": google_results,
+                "platformResults": platform_results,
+                "sentiment": sentiment,
+                "problemsDetected": problems,
+            },
+        )
+
+        # Envoi de la complétion (score + statut)
+        await send_results(
+            webhook_url,
+            secret,
+            scan_id,
+            "complete",
+            {"score": score},
         )
 
         logger.info(
@@ -127,9 +136,9 @@ def _detect_problems(
         if r.get("sentiment") == "negative":
             problems.append({
                 "type": "negative_search_result",
-                "source": r.get("url", ""),
-                "title": r.get("title", ""),
-                "detail": r.get("snippet", ""),
+                "description": f"{r.get('title', '')} — {r.get('snippet', '')}",
+                "url": r.get("url", ""),
+                "severity": "high",
             })
 
     # Plateformes importantes manquantes
@@ -146,9 +155,9 @@ def _detect_problems(
     for platform in sorted(missing):
         problems.append({
             "type": "missing_profile",
-            "source": platform,
-            "title": f"Profil {platform} non trouvé",
-            "detail": f"Aucun profil détecté sur {platform}",
+            "description": f"Aucun profil détecté sur {platform}",
+            "url": "",
+            "severity": "medium",
         })
 
     return problems

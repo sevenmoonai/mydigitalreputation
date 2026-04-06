@@ -68,7 +68,8 @@ async def start_scan(
     authorization: str = Header(default=""),
 ) -> ScanResponse:
     """Lance un scan en arrière-plan et renvoie 202 immédiatement."""
-    if authorization != WEBHOOK_SECRET:
+    expected = f"Bearer {WEBHOOK_SECRET}"
+    if authorization != expected:
         raise HTTPException(status_code=401, detail="Invalid authorization")
 
     if scan_semaphore.locked() and scan_semaphore._value == 0:

@@ -16,8 +16,11 @@ export const triggerScan = action({
     if (!webhookSecret)
       throw new ConvexError("SCAN_WEBHOOK_SECRET non configuré");
 
+    const siteUrl = process.env.CONVEX_SITE_URL;
+    if (!siteUrl) throw new ConvexError("CONVEX_SITE_URL non configuré");
+
     try {
-      const response = await fetch(`${serviceUrl}/api/scan`, {
+      const response = await fetch(`${serviceUrl}/scan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,6 +29,8 @@ export const triggerScan = action({
         body: JSON.stringify({
           scanId: args.scanId,
           query: args.query,
+          webhookUrl: `${siteUrl}/api/scan-webhook`,
+          secret: webhookSecret,
         }),
       });
 

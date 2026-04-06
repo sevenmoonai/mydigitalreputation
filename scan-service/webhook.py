@@ -34,11 +34,11 @@ async def send_results(
     payload = {
         "scanId": scan_id,
         "type": result_type,
-        "data": data,
+        **data,
     }
 
     headers = {
-        "X-Webhook-Secret": secret,
+        "Authorization": f"Bearer {secret}",
         "Content-Type": "application/json",
     }
 
