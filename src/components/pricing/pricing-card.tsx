@@ -1,125 +1,118 @@
+"use client"
+
 import Link from "next/link"
-import { Check } from "lucide-react"
+import { Check, Shield, Eye, Swords } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Tilt } from "@/components/effects/tilt"
+import { Spotlight } from "@/components/effects/spotlight"
 import { cn } from "@/lib/utils"
+import type { PricingTier } from "./pricing-tiers"
 
-type PricingTier = {
-  name: string
-  price: string
-  priceDetail?: string
-  description: string
-  features: string[]
-  cta: string
-  ctaHref: string
-  highlighted?: boolean
-  badge?: string
-}
+const iconMap = {
+  shield: <Shield className="size-5" />,
+  eye: <Eye className="size-5" />,
+  swords: <Swords className="size-5" />,
+} as const
 
 export function PricingCard({ tier }: { tier: PricingTier }) {
+  const icon = iconMap[tier.iconName]
+
   return (
-    <Card
-      className={cn(
-        "relative flex flex-col",
-        tier.highlighted && "border-primary shadow-md"
-      )}
-    >
-      {tier.badge && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <Badge>{tier.badge}</Badge>
-        </div>
-      )}
-      <CardHeader className="text-center">
-        <CardTitle className="text-xl">{tier.name}</CardTitle>
-        <CardDescription>{tier.description}</CardDescription>
-        <div className="mt-4">
-          <span className="text-4xl font-bold tracking-tight">
-            {tier.price}
-          </span>
-          {tier.priceDetail && (
-            <span className="ml-1 text-sm text-muted-foreground">
-              {tier.priceDetail}
-            </span>
+    <Tilt maxTilt={8} scale={1.02} className="h-full">
+      <Spotlight
+        spotlightSize={350}
+        spotlightColor={`${tier.glowColor}15`}
+        className={cn(
+          "h-full rounded-xl border bg-card/50 backdrop-blur-sm transition-all duration-300",
+          tier.highlighted
+            ? "border-[var(--accent-glow)]/30 shadow-[0_0_30px_var(--accent-glow)/0.08]"
+            : "border-white/[0.06] hover:border-white/[0.1]"
+        )}
+      >
+        <div className="flex h-full flex-col p-6 sm:p-8">
+          {tier.badge && (
+            <div className="mb-4">
+              <Badge
+                className={cn(
+                  "border-0 font-semibold",
+                  tier.highlighted
+                    ? "bg-[var(--accent-glow)]/15 text-[var(--accent-glow)]"
+                    : "bg-amber-500/15 text-amber-400"
+                )}
+              >
+                {tier.badge}
+              </Badge>
+            </div>
           )}
+
+          <div className={cn(
+            "mb-4 flex size-10 items-center justify-center rounded-lg",
+            tier.highlighted
+              ? "bg-[var(--accent-glow)]/10 text-[var(--accent-glow)]"
+              : "text-muted-foreground bg-white/5"
+          )}>
+            {icon}
+          </div>
+
+          <h3 className="text-lg font-semibold text-foreground">{tier.name}</h3>
+          <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {tier.codename}
+          </p>
+
+          <div className="mt-4 mb-1">
+            <span className="text-4xl font-bold tracking-tight text-foreground">
+              {tier.price}
+            </span>
+            {tier.priceDetail && (
+              <span className="ml-1 text-sm text-muted-foreground">
+                {tier.priceDetail}
+              </span>
+            )}
+          </div>
+
+          <p className="text-sm text-muted-foreground">{tier.description}</p>
+
+          <div className="my-6 h-px bg-white/[0.06]" />
+
+          <ul className="flex-1 space-y-3">
+            {tier.features.map((feature) => (
+              <li key={feature} className="flex items-start gap-2.5 text-sm">
+                <div className={cn(
+                  "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full",
+                  tier.highlighted
+                    ? "text-[var(--accent-glow)] drop-shadow-[0_0_4px_var(--accent-glow)]"
+                    : "text-[var(--accent-safe)]"
+                )}>
+                  <Check className="size-3.5" strokeWidth={2.5} />
+                </div>
+                <span className="text-muted-foreground">{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8">
+            {tier.highlighted ? (
+              <Button
+                size="lg"
+                render={<Link href={tier.ctaHref} />}
+                className="w-full bg-[var(--accent-glow)] text-black font-semibold hover:bg-[var(--accent-glow)]/90 shadow-[0_0_20px_var(--accent-glow)/0.3] transition-shadow hover:shadow-[0_0_30px_var(--accent-glow)/0.4]"
+              >
+                {tier.cta}
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                variant="outline"
+                render={<Link href={tier.ctaHref} />}
+                className="w-full border-white/10 hover:border-white/20 hover:bg-white/5"
+              >
+                {tier.cta}
+              </Button>
+            )}
+          </div>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <ul className="space-y-3">
-          {tier.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-2 text-sm">
-              <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-      <CardFooter>
-        <Button
-          className="w-full"
-          variant={tier.highlighted ? "default" : "outline"}
-          size="lg"
-          render={<Link href={tier.ctaHref} />}
-        >
-          {tier.cta}
-        </Button>
-      </CardFooter>
-    </Card>
+      </Spotlight>
+    </Tilt>
   )
 }
-
-export const PRICING_TIERS: PricingTier[] = [
-  {
-    name: "Gratuit",
-    price: "0\u00A0\u20AC",
-    description: "Decouvrez votre reputation en ligne",
-    features: [
-      "Scan illimite",
-      "Dashboard basique",
-      "Score de reputation",
-      "Resultats Google + reseaux",
-    ],
-    cta: "Commencer gratuitement",
-    ctaHref: "/scan",
-  },
-  {
-    name: "Preventif",
-    price: "150\u00A0\u20AC",
-    priceDetail: "/mois",
-    description: "Surveillance continue de votre reputation",
-    features: [
-      "Tout le plan Gratuit",
-      "Monitoring 24/7",
-      "Alertes email + in-app",
-      "Credits creation profils (10/mois)",
-      "Rapports mensuels",
-    ],
-    cta: "Contactez-nous",
-    ctaHref: "/contact",
-    highlighted: true,
-    badge: "Populaire",
-  },
-  {
-    name: "Defensif",
-    price: "800\u00A0\u20AC",
-    priceDetail: "et plus / projet",
-    description: "Nettoyage et protection sur-mesure",
-    features: [
-      "Diagnostic expert",
-      "Suppression de contenus",
-      "Creation de profils strategiques",
-      "Accompagnement personnalise",
-      "Suivi du projet",
-    ],
-    cta: "Reserver un appel",
-    ctaHref: "/contact",
-    badge: "Par projet",
-  },
-]

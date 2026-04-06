@@ -1,9 +1,13 @@
+"use client"
+
+import { motion } from "motion/react"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { InView } from "@/components/effects/in-view"
 
 const faqs = [
   {
@@ -19,7 +23,7 @@ const faqs = [
   {
     question: "Comment fonctionne le scan ?",
     answer:
-      "Notre moteur analyse plus de 400 plateformes (reseaux sociaux, annuaires, forums) et les resultats Google associes a votre nom. Vous obtenez un score de reputation, la liste de vos profils et les eventuels contenus problematiques — le tout en moins de 30 secondes.",
+      "Notre moteur analyse plus de 437 plateformes (reseaux sociaux, annuaires, forums) et les resultats Google associes a votre nom. Vous obtenez un score de reputation, la liste de vos profils et les eventuels contenus problematiques — le tout en moins de 30 secondes.",
   },
   {
     question: "Le scan est-il vraiment gratuit ?",
@@ -40,24 +44,44 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section className="border-t py-20">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Questions frequentes
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Tout ce que vous devez savoir sur l&apos;e-reputation.
-          </p>
-        </div>
-        <Accordion className="mt-10">
-          {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`item-${i}`}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
-              <AccordionContent>{faq.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+    <section className="relative overflow-hidden bg-black py-20 sm:py-28">
+      <div className="absolute inset-0">
+        <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-zinc-800/50 to-transparent" />
+      </div>
+
+      <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
+        <InView>
+          <div className="text-center">
+            <span className="font-mono text-xs uppercase tracking-widest text-cyan-500">
+              FAQ
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Questions frequentes
+            </h2>
+            <p className="mt-4 text-zinc-500">
+              Tout ce que vous devez savoir sur l&apos;e-reputation.
+            </p>
+          </div>
+        </InView>
+
+        <InView transition={{ duration: 0.5, delay: 0.2 }}>
+          <Accordion className="mt-10">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`item-${i}`}
+                className="border-zinc-800/50"
+              >
+                <AccordionTrigger className="text-left text-zinc-200 hover:text-white hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-zinc-500">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </InView>
       </div>
     </section>
   )
