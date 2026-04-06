@@ -2,6 +2,7 @@
 
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 
@@ -43,7 +44,7 @@ export function AlertItem({ id, severity, title, source, url, read, createdAt }:
 
   function handleClick() {
     if (!read) {
-      markRead({ alertId: id });
+      markRead({ alertId: id as Id<"alerts"> });
     }
   }
 

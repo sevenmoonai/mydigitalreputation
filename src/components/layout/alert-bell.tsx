@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import {
   Popover,
   PopoverContent,
@@ -82,7 +83,7 @@ export function AlertBell() {
                       : ""
                   }`}
                   onClick={() => {
-                    if (!alert.read) markRead({ alertId: alert._id });
+                    if (!alert.read) markRead({ alertId: alert._id as Id<"alerts"> });
                   }}
                 >
                   <Badge

@@ -3,6 +3,7 @@
 import { use } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
+import type { Id } from "../../../../../convex/_generated/dataModel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ export default function ProjectDetailPage({
 }) {
   const { id } = use(params);
   const project = useQuery(api.projects.getProject, {
-    projectId: id,
+    projectId: id as Id<"projects">,
   });
 
   if (project === undefined) {
